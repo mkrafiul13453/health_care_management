@@ -1,9 +1,10 @@
 /*
 =====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM (HMS)  --  Beginner Friendly C Program
+   HEALTHCARE MANAGEMENT SYSTEM (HMS)  
 =====================================================================
-   এই প্রোগ্রামে ১২টা Functional Requirement আছে। প্রত্যেকটা আলাদা
-   section এ ভাগ করা আছে, যাতে সহজে বোঝা যায় কোন অংশ কোন কাজ করছে।
+   This program has 12 Functional Requirements. Each one is divided
+   into a separate section, so it's easy to understand which part
+   does what.
 
    1. User & Access (Role based Login)          -> SECTION 1
    2. Patient Registration                       -> SECTION 2
@@ -16,7 +17,7 @@
    9. Billing/Invoicing                           -> SECTION 9
    10. Reports/Dashboard                          -> SECTION 10
    11. Lab/Test Requests                          -> SECTION 11
-   12. Test Status Tracking                       -> (SECTION 11 এর ভিতরেই আছে)
+   12. Test Status Tracking                       -> (inside SECTION 11)
 =====================================================================
 */
 
@@ -25,7 +26,7 @@
 #include <stdlib.h>
 
 /* ---------------------------------------------------------------
-   MAX SIZE গুলো -- কতগুলো data  যাবে তার limit
+   MAX SIZE values -- limits on how much data can be stored
    --------------------------------------------------------------- */
 #define MAX_PATIENTS 100
 #define MAX_DOCTORS 20
@@ -65,7 +66,7 @@ typedef struct
     char gender[10];
     char disease[100];
     char phone[15];
-    int doctorId; /* assigned doctor, -1 হলে কেউ assign করা নাই */
+    int doctorId; /* assigned doctor, -1 means none assigned */
     int active;   /* 1 = registered/valid record */
 } Patient;
 
@@ -196,7 +197,7 @@ LabTest labTests[MAX_LABTESTS];
 int labTestCount = 0;
 
 /* =================================================================
-   HELPER FUNCTIONS (Input নেওয়ার জন্য সহজ function)
+   HELPER FUNCTIONS (for taking input easily)
    ================================================================= */
 void clearBuffer()
 {
@@ -208,7 +209,7 @@ void clearBuffer()
 void getString(char *buffer, int size)
 {
     fgets(buffer, size, stdin);
-    buffer[strcspn(buffer, "\n")] = '\0'; /* শেষের \n মুছে দেয় */
+    buffer[strcspn(buffer, "\n")] = '\0'; /* removes the trailing \n */
 }
 
 int readInt()
@@ -229,7 +230,7 @@ float readFloat()
 
 void pause()
 {
-    printf("\nContinue করতে Enter চাপুন...");
+    printf("\nPress Enter to continue...");
     getchar();
 }
 
@@ -250,19 +251,19 @@ void registerPatient()
 {
     if (patientCount >= MAX_PATIENTS)
     {
-        printf("Patient list ভর্তি, আর নেওয়া যাবে না।\n");
+        printf("Patient list is full, cannot add more.\n");
         return;
     }
     Patient p;
     p.id = patientCount + 1; /* Unique Patient ID auto generate */
-    printf("\n--- নতুন Patient Registration ---\n");
-    printf("নাম দিন: ");
+    printf("\n--- New Patient Registration ---\n");
+    printf("Enter name: ");
     getString(p.name, 50);
-    printf("বয়স দিন: ");
+    printf("Enter age: ");
     p.age = readInt();
     printf("Gender (Male/Female/Other): ");
     getString(p.gender, 10);
-    printf("Disease/সমস্যা লিখুন: ");
+    printf("Enter disease/problem: ");
     getString(p.disease, 100);
     printf("Phone Number: ");
     getString(p.phone, 15);
@@ -272,15 +273,15 @@ void registerPatient()
     patients[patientCount] = p;
     patientCount++;
 
-    printf("\n✅ Patient Registered সফল হয়েছে। Patient ID = %d\n", p.id);
+    printf("\nPatient Registered successfully. Patient ID = %d\n", p.id);
 }
 
 void viewAllPatients()
 {
-    printf("\n--- সব Patient এর তালিকা ---\n");
+    printf("\n--- List of All Patients ---\n");
     if (patientCount == 0)
     {
-        printf("কোনো Patient নেই।\n");
+        printf("No patients found.\n");
         return;
     }
     printf("%-5s %-20s %-5s %-10s %-20s %-12s %-10s\n",
@@ -313,28 +314,28 @@ void addDoctor()
 {
     if (doctorCount >= MAX_DOCTORS)
     {
-        printf("Doctor list ভর্তি।\n");
+        printf("Doctor list is full.\n");
         return;
     }
     Doctor d;
     d.id = doctorCount + 1;
-    printf("\n--- নতুন Doctor যোগ করুন ---\n");
-    printf("Doctor এর নাম: ");
+    printf("\n--- Add New Doctor ---\n");
+    printf("Doctor's name: ");
     getString(d.name, 50);
-    printf("Specialization (যেমন: Cardiologist): ");
+    printf("Specialization (e.g. Cardiologist): ");
     getString(d.specialization, 50);
 
     doctors[doctorCount] = d;
     doctorCount++;
-    printf("\n✅ Doctor যোগ হয়েছে। Doctor ID = %d\n", d.id);
+    printf("\nDoctor added. Doctor ID = %d\n", d.id);
 }
 
 void viewAllDoctors()
 {
-    printf("\n--- সব Doctor এর তালিকা ---\n");
+    printf("\n--- List of All Doctors ---\n");
     if (doctorCount == 0)
     {
-        printf("কোনো Doctor নেই।\n");
+        printf("No doctors found.\n");
         return;
     }
     printf("%-5s %-20s %-20s\n", "ID", "Name", "Specialization");
@@ -346,33 +347,33 @@ void viewAllDoctors()
 
 void assignDoctorToPatient()
 {
-    printf("\n--- Patient কে Doctor Assign করুন ---\n");
-    printf("Patient ID দিন: ");
+    printf("\n--- Assign Doctor to Patient ---\n");
+    printf("Enter Patient ID: ");
     int pid = readInt();
     Patient *p = findPatientById(pid);
     if (!p)
     {
-        printf("এই Patient ID পাওয়া যায়নি।\n");
+        printf("Patient ID not found.\n");
         return;
     }
 
-    printf("Doctor ID দিন: ");
+    printf("Enter Doctor ID: ");
     int did = readInt();
     Doctor *d = findDoctorById(did);
     if (!d)
     {
-        printf("এই Doctor ID পাওয়া যায়নি।\n");
+        printf("Doctor ID not found.\n");
         return;
     }
 
     p->doctorId = did;
-    printf("\n✅ %s কে Dr. %s এর সাথে Assign করা হয়েছে।\n", p->name, d->name);
+    printf("\n%s has been assigned to Dr. %s.\n", p->name, d->name);
 }
 
 void doctorDashboard()
 {
     printf("\n--- Doctor Dashboard: Assigned Patients ---\n");
-    printf("আপনার Doctor ID দিন: ");
+    printf("Enter your Doctor ID: ");
     int did = readInt();
     int found = 0;
     for (int i = 0; i < patientCount; i++)
@@ -385,7 +386,7 @@ void doctorDashboard()
         }
     }
     if (!found)
-        printf("এই Doctor এর কোনো Patient Assign করা নেই।\n");
+        printf("No patients assigned to this doctor.\n");
 }
 
 /* =================================================================
@@ -395,16 +396,16 @@ void bookAppointment()
 {
     if (appointmentCount >= MAX_APPOINTMENTS)
     {
-        printf("Appointment list ভর্তি।\n");
+        printf("Appointment list is full.\n");
         return;
     }
     Appointment a;
-    printf("\n--- নতুন Appointment বুক করুন ---\n");
+    printf("\n--- Book a New Appointment ---\n");
     printf("Patient ID: ");
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
 
@@ -412,17 +413,17 @@ void bookAppointment()
     int did = readInt();
     if (!findDoctorById(did))
     {
-        printf("Doctor পাওয়া যায়নি।\n");
+        printf("Doctor not found.\n");
         return;
     }
 
     char date[15], time[10];
-    printf("Date দিন (DD-MM-YYYY): ");
+    printf("Enter Date (DD-MM-YYYY): ");
     getString(date, 15);
-    printf("Time দিন (HH:MM): ");
+    printf("Enter Time (HH:MM): ");
     getString(time, 10);
 
-    /* Double booking check: একই Doctor, একই Date, একই Time */
+    /* Double booking check: same doctor, same date, same time */
     for (int i = 0; i < appointmentCount; i++)
     {
         if (appointments[i].status == 0 &&
@@ -430,7 +431,7 @@ void bookAppointment()
             strcmp(appointments[i].date, date) == 0 &&
             strcmp(appointments[i].time, time) == 0)
         {
-            printf("\n❌ এই সময়ে Doctor আগে থেকেই Booked আছে। অন্য সময় বেছে নিন।\n");
+            printf("\nDoctor is already booked at this time. Please choose another time.\n");
             return;
         }
     }
@@ -444,32 +445,32 @@ void bookAppointment()
 
     appointments[appointmentCount] = a;
     appointmentCount++;
-    printf("\n✅ Appointment Booked হয়েছে। Appointment ID = %d\n", a.id);
+    printf("\nAppointment Booked. Appointment ID = %d\n", a.id);
 }
 
 void cancelAppointment()
 {
-    printf("\n--- Appointment বাতিল করুন ---\n");
-    printf("Appointment ID দিন: ");
+    printf("\n--- Cancel Appointment ---\n");
+    printf("Enter Appointment ID: ");
     int id = readInt();
     for (int i = 0; i < appointmentCount; i++)
     {
         if (appointments[i].id == id && appointments[i].status == 0)
         {
             appointments[i].status = 1;
-            printf("✅ Appointment বাতিল হয়েছে।\n");
+            printf("Appointment cancelled.\n");
             return;
         }
     }
-    printf("এই ID তে কোনো Active Appointment পাওয়া যায়নি।\n");
+    printf("No active appointment found with this ID.\n");
 }
 
 void viewAppointments()
 {
-    printf("\n--- সব Appointment ---\n");
+    printf("\n--- All Appointments ---\n");
     if (appointmentCount == 0)
     {
-        printf("কোনো Appointment নেই।\n");
+        printf("No appointments found.\n");
         return;
     }
     printf("%-5s %-10s %-10s %-12s %-8s %-10s\n",
@@ -490,45 +491,45 @@ void addMedicalRecord()
 {
     if (recordCount >= MAX_RECORDS)
     {
-        printf("Record list ভর্তি।\n");
+        printf("Record list is full.\n");
         return;
     }
     MedicalRecord r;
-    printf("\n--- নতুন Medical Record যোগ করুন ---\n");
+    printf("\n--- Add New Medical Record ---\n");
     printf("Patient ID: ");
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
     printf("Doctor ID: ");
     int did = readInt();
     if (!findDoctorById(did))
     {
-        printf("Doctor পাওয়া যায়নি।\n");
+        printf("Doctor not found.\n");
         return;
     }
 
     r.id = recordCount + 1;
     r.patientId = pid;
     r.doctorId = did;
-    printf("Diagnosis লিখুন: ");
+    printf("Enter Diagnosis: ");
     getString(r.diagnosis, 150);
-    printf("Prescription লিখুন: ");
+    printf("Enter Prescription: ");
     getString(r.prescription, 150);
-    printf("Date দিন (DD-MM-YYYY): ");
+    printf("Enter Date (DD-MM-YYYY): ");
     getString(r.date, 15);
 
     records[recordCount] = r;
     recordCount++;
-    printf("\n✅ Medical Record যোগ হয়েছে।\n");
+    printf("\nMedical Record added.\n");
 }
 
 void viewMedicalRecords()
 {
-    printf("\n--- Medical Records দেখুন ---\n");
-    printf("Patient ID দিন (সব দেখতে 0 দিন): ");
+    printf("\n--- View Medical Records ---\n");
+    printf("Enter Patient ID (enter 0 to view all): ");
     int pid = readInt();
     int found = 0;
     for (int i = 0; i < recordCount; i++)
@@ -543,7 +544,7 @@ void viewMedicalRecords()
         }
     }
     if (!found)
-        printf("কোনো Record পাওয়া যায়নি।\n");
+        printf("No records found.\n");
 }
 
 /* =================================================================
@@ -551,7 +552,7 @@ void viewMedicalRecords()
    ================================================================= */
 void initBeds()
 {
-    /* শুরুতে ২০টা বেড তৈরি হবে: 10 General, 5 ICU, 5 Cabin */
+    /* At startup 20 beds are created: 10 General, 5 ICU, 5 Cabin */
     int i;
     for (i = 0; i < 10; i++)
     {
@@ -598,16 +599,16 @@ void viewBedStatus()
 void admitPatient()
 {
     printf("\n--- Patient Admission ---\n");
-    printf("Patient ID দিন: ");
+    printf("Enter Patient ID: ");
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
 
     char ward[20];
-    printf("কোন Ward চান (General/ICU/Cabin): ");
+    printf("Which Ward do you want (General/ICU/Cabin): ");
     getString(ward, 20);
 
     for (int i = 0; i < bedCount; i++)
@@ -616,20 +617,20 @@ void admitPatient()
         {
             beds[i].isOccupied = 1;
             beds[i].patientId = pid;
-            printf("Admit Date দিন (DD-MM-YYYY): ");
+            printf("Enter Admit Date (DD-MM-YYYY): ");
             getString(beds[i].admitDate, 15);
-            printf("\n✅ Patient কে Bed No %d (%s) এ Admit করা হয়েছে।\n",
+            printf("\nPatient admitted to Bed No %d (%s).\n",
                    beds[i].bedNo, beds[i].ward);
             return;
         }
     }
-    printf("\n❌ দুঃখিত, %s Ward এ কোনো Free Bed নেই।\n", ward);
+    printf("\nSorry, no free bed available in %s Ward.\n", ward);
 }
 
 void dischargePatient()
 {
     printf("\n--- Patient Discharge ---\n");
-    printf("Bed Number দিন: ");
+    printf("Enter Bed Number: ");
     int bedNo = readInt();
     for (int i = 0; i < bedCount; i++)
     {
@@ -637,17 +638,17 @@ void dischargePatient()
         {
             if (!beds[i].isOccupied)
             {
-                printf("এই Bed তো আগে থেকেই Free আছে।\n");
+                printf("This bed is already free.\n");
                 return;
             }
             beds[i].isOccupied = 0;
             beds[i].patientId = -1;
             strcpy(beds[i].admitDate, "-");
-            printf("✅ Patient Discharge করা হয়েছে, Bed No %d এখন Free।\n", bedNo);
+            printf("Patient discharged, Bed No %d is now free.\n", bedNo);
             return;
         }
     }
-    printf("এই Bed Number পাওয়া যায়নি।\n");
+    printf("Bed number not found.\n");
 }
 
 /* =================================================================
@@ -657,7 +658,7 @@ void bookOT()
 {
     if (otCount >= MAX_OT)
     {
-        printf("OT booking list ভর্তি।\n");
+        printf("OT booking list is full.\n");
         return;
     }
     OTBooking o;
@@ -666,47 +667,47 @@ void bookOT()
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
 
     o.id = otCount + 1;
     o.patientId = pid;
-    printf("Surgery Type লিখুন: ");
+    printf("Enter Surgery Type: ");
     getString(o.surgeryType, 50);
-    printf("Date দিন (DD-MM-YYYY): ");
+    printf("Enter Date (DD-MM-YYYY): ");
     getString(o.date, 15);
     strcpy(o.status, "Scheduled");
 
     otBookings[otCount] = o;
     otCount++;
-    printf("\n✅ OT Booking সম্পন্ন হয়েছে। OT Booking ID = %d\n", o.id);
+    printf("\nOT Booking completed. OT Booking ID = %d\n", o.id);
 }
 
 void updateOTStatus()
 {
-    printf("\n--- OT Status আপডেট করুন ---\n");
-    printf("OT Booking ID দিন: ");
+    printf("\n--- Update OT Status ---\n");
+    printf("Enter OT Booking ID: ");
     int id = readInt();
     for (int i = 0; i < otCount; i++)
     {
         if (otBookings[i].id == id)
         {
-            printf("নতুন Status দিন (Scheduled/Completed/Cancelled): ");
+            printf("Enter new Status (Scheduled/Completed/Cancelled): ");
             getString(otBookings[i].status, 20);
-            printf("✅ Status আপডেট হয়েছে।\n");
+            printf("Status updated.\n");
             return;
         }
     }
-    printf("এই ID পাওয়া যায়নি।\n");
+    printf("ID not found.\n");
 }
 
 void viewOTBookings()
 {
-    printf("\n--- সব OT Booking ---\n");
+    printf("\n--- All OT Bookings ---\n");
     if (otCount == 0)
     {
-        printf("কোনো OT Booking নেই।\n");
+        printf("No OT bookings found.\n");
         return;
     }
     printf("%-5s %-10s %-20s %-12s %-12s\n", "ID", "PatientID", "SurgeryType", "Date", "Status");
@@ -735,30 +736,30 @@ void addMedicine()
 {
     if (medicineCount >= MAX_MEDICINES)
     {
-        printf("Medicine list ভর্তি।\n");
+        printf("Medicine list is full.\n");
         return;
     }
     Medicine m;
     m.id = medicineCount + 1;
-    printf("\n--- নতুন Medicine যোগ করুন ---\n");
-    printf("Medicine এর নাম: ");
+    printf("\n--- Add New Medicine ---\n");
+    printf("Medicine name: ");
     getString(m.name, 50);
-    printf("Stock পরিমাণ: ");
+    printf("Stock quantity: ");
     m.stock = readInt();
-    printf("Price (প্রতি ইউনিট): ");
+    printf("Price (per unit): ");
     m.price = readFloat();
 
     medicines[medicineCount] = m;
     medicineCount++;
-    printf("\n✅ Medicine যোগ হয়েছে। Medicine ID = %d\n", m.id);
+    printf("\nMedicine added. Medicine ID = %d\n", m.id);
 }
 
 void viewInventory()
 {
-    printf("\n--- Inventory / Stock তালিকা ---\n");
+    printf("\n--- Inventory / Stock List ---\n");
     if (medicineCount == 0)
     {
-        printf("কোনো Medicine নেই।\n");
+        printf("No medicines found.\n");
         return;
     }
     printf("%-5s %-20s %-10s %-10s %-10s\n", "ID", "Name", "Stock", "Price", "Alert");
@@ -772,29 +773,29 @@ void viewInventory()
 
 void sellMedicine()
 {
-    printf("\n--- Medicine বিক্রি করুন ---\n");
+    printf("\n--- Sell Medicine ---\n");
     printf("Medicine ID: ");
     int id = readInt();
     Medicine *m = findMedicineById(id);
     if (!m)
     {
-        printf("Medicine পাওয়া যায়নি।\n");
+        printf("Medicine not found.\n");
         return;
     }
 
-    printf("কত পরিমাণ বিক্রি করবেন: ");
+    printf("Enter quantity to sell: ");
     int qty = readInt();
     if (qty > m->stock)
     {
-        printf("❌ পর্যাপ্ত Stock নেই। বর্তমান Stock: %d\n", m->stock);
+        printf("Not enough stock available. Current stock: %d\n", m->stock);
         return;
     }
     m->stock -= qty;
-    printf("\n✅ বিক্রি সম্পন্ন। মোট দাম: %.2f\n", qty * m->price);
+    printf("\nSale completed. Total price: %.2f\n", qty * m->price);
 
     if (m->stock < LOW_STOCK_LIMIT)
     {
-        printf("⚠️  সতর্কতা: %s এর Stock কমে গেছে (%d বাকি)। দ্রুত নতুন Stock আনুন।\n",
+        printf("Warning: Stock for %s is running low (%d remaining). Please restock soon.\n",
                m->name, m->stock);
     }
 }
@@ -807,19 +808,19 @@ void addDamagedStock()
     Medicine *m = findMedicineById(id);
     if (!m)
     {
-        printf("Medicine পাওয়া যায়নি।\n");
+        printf("Medicine not found.\n");
         return;
     }
 
-    printf("কত পরিমাণ Damaged: ");
+    printf("Enter damaged quantity: ");
     int qty = readInt();
     if (qty > m->stock)
     {
-        printf("❌ এত পরিমাণ Stock এ নেই।\n");
+        printf("Not enough stock for this amount.\n");
         return;
     }
     m->stock -= qty;
-    printf("✅ Damaged Stock বাদ দেওয়া হয়েছে। বর্তমান Stock: %d\n", m->stock);
+    printf("Damaged stock removed. Current stock: %d\n", m->stock);
 }
 
 /* =================================================================
@@ -829,29 +830,29 @@ void generateBill()
 {
     if (billCount >= MAX_BILLS)
     {
-        printf("Bill list ভর্তি।\n");
+        printf("Bill list is full.\n");
         return;
     }
     Bill b;
-    printf("\n--- নতুন Bill তৈরি করুন ---\n");
+    printf("\n--- Generate New Bill ---\n");
     printf("Patient ID: ");
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
 
     b.id = billCount + 1;
     b.patientId = pid;
 
-    printf("Consultation Fee দিন: ");
+    printf("Enter Consultation Fee: ");
     b.consultationFee = readFloat();
-    printf("Medicine Bill দিন: ");
+    printf("Enter Medicine Bill: ");
     b.medicineBill = readFloat();
-    printf("Bed/Ward Bill দিন: ");
+    printf("Enter Bed/Ward Bill: ");
     b.bedBill = readFloat();
-    printf("OT Bill দিন (না থাকলে 0): ");
+    printf("Enter OT Bill (0 if none): ");
     b.otBill = readFloat();
 
     b.totalBill = b.consultationFee + b.medicineBill + b.bedBill + b.otBill;
@@ -860,39 +861,39 @@ void generateBill()
 
     bills[billCount] = b;
     billCount++;
-    printf("\n✅ Bill তৈরি হয়েছে। Bill ID = %d | Total = %.2f\n", b.id, b.totalBill);
+    printf("\nBill generated. Bill ID = %d | Total = %.2f\n", b.id, b.totalBill);
 }
 
 void makePayment()
 {
-    printf("\n--- Payment করুন (Partial Payment ও সাপোর্ট করে) ---\n");
-    printf("Bill ID দিন: ");
+    printf("\n--- Make Payment (Partial Payment supported) ---\n");
+    printf("Enter Bill ID: ");
     int id = readInt();
     for (int i = 0; i < billCount; i++)
     {
         if (bills[i].id == id)
         {
-            printf("বর্তমান বকেয়া (Due): %.2f\n", bills[i].dueAmount);
-            printf("কত টাকা দিচ্ছেন: ");
+            printf("Current Due Amount: %.2f\n", bills[i].dueAmount);
+            printf("Enter amount being paid: ");
             float amt = readFloat();
             if (amt > bills[i].dueAmount)
             {
-                printf("❌ এত টাকা বকেয়ার চেয়ে বেশি। সঠিক টাকা দিন।\n");
+                printf("Amount exceeds the due amount. Please enter a correct amount.\n");
                 return;
             }
             bills[i].paidAmount += amt;
             bills[i].dueAmount -= amt;
-            printf("✅ Payment সম্পন্ন। বাকি Due = %.2f\n", bills[i].dueAmount);
+            printf("Payment completed. Remaining Due = %.2f\n", bills[i].dueAmount);
             return;
         }
     }
-    printf("এই Bill ID পাওয়া যায়নি।\n");
+    printf("Bill ID not found.\n");
 }
 
 void printInvoice()
 {
-    printf("\n--- Invoice Print করুন ---\n");
-    printf("Bill ID দিন: ");
+    printf("\n--- Print Invoice ---\n");
+    printf("Enter Bill ID: ");
     int id = readInt();
     for (int i = 0; i < billCount; i++)
     {
@@ -916,15 +917,15 @@ void printInvoice()
             return;
         }
     }
-    printf("এই Bill ID পাওয়া যায়নি।\n");
+    printf("Bill ID not found.\n");
 }
 
 void viewAllBills()
 {
-    printf("\n--- সব Bill এর তালিকা ---\n");
+    printf("\n--- List of All Bills ---\n");
     if (billCount == 0)
     {
-        printf("কোনো Bill নেই।\n");
+        printf("No bills found.\n");
         return;
     }
     printf("%-5s %-10s %-10s %-10s %-10s %-8s\n",
@@ -945,56 +946,56 @@ void requestLabTest()
 {
     if (labTestCount >= MAX_LABTESTS)
     {
-        printf("Lab Test list ভর্তি।\n");
+        printf("Lab Test list is full.\n");
         return;
     }
     LabTest t;
-    printf("\n--- নতুন Lab Test Request ---\n");
+    printf("\n--- New Lab Test Request ---\n");
     printf("Patient ID: ");
     int pid = readInt();
     if (!findPatientById(pid))
     {
-        printf("Patient পাওয়া যায়নি।\n");
+        printf("Patient not found.\n");
         return;
     }
 
     t.id = labTestCount + 1;
     t.patientId = pid;
-    printf("Test এর নাম লিখুন (যেমন: Blood Test): ");
+    printf("Enter Test name (e.g. Blood Test): ");
     getString(t.testName, 50);
     strcpy(t.status, "Pending");
     strcpy(t.result, "-");
 
     labTests[labTestCount] = t;
     labTestCount++;
-    printf("\n✅ Lab Test Request করা হয়েছে। Test ID = %d (Status: Pending)\n", t.id);
+    printf("\nLab Test Requested. Test ID = %d (Status: Pending)\n", t.id);
 }
 
 void updateTestStatus()
 {
-    printf("\n--- Lab Test Status আপডেট করুন ---\n");
-    printf("Test ID দিন: ");
+    printf("\n--- Update Lab Test Status ---\n");
+    printf("Enter Test ID: ");
     int id = readInt();
     for (int i = 0; i < labTestCount; i++)
     {
         if (labTests[i].id == id)
         {
             strcpy(labTests[i].status, "Completed");
-            printf("Test Result লিখুন: ");
+            printf("Enter Test Result: ");
             getString(labTests[i].result, 100);
-            printf("✅ Test Status 'Completed' করা হয়েছে এবং Result Patient এর সাথে Link করা হয়েছে।\n");
+            printf("Test Status set to 'Completed' and Result linked to the patient.\n");
             return;
         }
     }
-    printf("এই Test ID পাওয়া যায়নি।\n");
+    printf("Test ID not found.\n");
 }
 
 void viewLabTests()
 {
-    printf("\n--- সব Lab Test এর তালিকা ---\n");
+    printf("\n--- List of All Lab Tests ---\n");
     if (labTestCount == 0)
     {
-        printf("কোনো Test নেই।\n");
+        printf("No tests found.\n");
         return;
     }
     printf("%-5s %-10s %-20s %-12s %-20s\n", "ID", "PatientID", "TestName", "Status", "Result");
@@ -1030,22 +1031,22 @@ void showDashboard()
     }
 
     printf("\n============== DASHBOARD / REPORT ==============\n");
-    printf("মোট Patient সংখ্যা          : %d\n", patientCount);
-    printf("মোট Doctor সংখ্যা           : %d\n", doctorCount);
-    printf("মোট Appointment সংখ্যা      : %d\n", appointmentCount);
-    printf("মোট Bed সংখ্যা               : %d\n", bedCount);
-    printf("Occupied Bed সংখ্যা          : %d\n", occupiedBeds);
-    printf("Free Bed সংখ্যা              : %d\n", bedCount - occupiedBeds);
-    printf("মোট OT Booking সংখ্যা       : %d\n", otCount);
-    printf("Low Stock Medicine সংখ্যা   : %d\n", lowStockCount);
-    printf("Pending Lab Test সংখ্যা     : %d\n", pendingTests);
-    printf("মোট Collected টাকা          : %.2f\n", totalCollected);
-    printf("মোট বকেয়া (Due) টাকা        : %.2f\n", totalDue);
+    printf("Total Patients               : %d\n", patientCount);
+    printf("Total Doctors                : %d\n", doctorCount);
+    printf("Total Appointments           : %d\n", appointmentCount);
+    printf("Total Beds                   : %d\n", bedCount);
+    printf("Occupied Beds                : %d\n", occupiedBeds);
+    printf("Free Beds                    : %d\n", bedCount - occupiedBeds);
+    printf("Total OT Bookings            : %d\n", otCount);
+    printf("Low Stock Medicines          : %d\n", lowStockCount);
+    printf("Pending Lab Tests            : %d\n", pendingTests);
+    printf("Total Collected Amount       : %.2f\n", totalCollected);
+    printf("Total Due Amount             : %.2f\n", totalDue);
     printf("==================================================\n");
 }
 
 /* =================================================================
-   MENUS  (Role Based Access -- SECTION 1 এর অংশ)
+   MENUS  (Role Based Access -- part of SECTION 1)
    ================================================================= */
 void patientMenu()
 {
@@ -1053,7 +1054,7 @@ void patientMenu()
     do
     {
         printf("\n---- Patient Management ----\n");
-        printf("1. Patient Register করুন\n2. সব Patient দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Register Patient\n2. View All Patients\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             registerPatient();
@@ -1068,7 +1069,7 @@ void doctorMenu()
     do
     {
         printf("\n---- Doctor Management ----\n");
-        printf("1. Doctor যোগ করুন\n2. সব Doctor দেখুন\n3. Patient কে Doctor Assign করুন\n4. Doctor Dashboard\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Add Doctor\n2. View All Doctors\n3. Assign Doctor to Patient\n4. Doctor Dashboard\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             addDoctor();
@@ -1087,7 +1088,7 @@ void appointmentMenu()
     do
     {
         printf("\n---- Appointment Scheduling ----\n");
-        printf("1. Appointment Book করুন\n2. Appointment Cancel করুন\n3. সব Appointment দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Book Appointment\n2. Cancel Appointment\n3. View All Appointments\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             bookAppointment();
@@ -1104,7 +1105,7 @@ void recordMenu()
     do
     {
         printf("\n---- Medical Records ----\n");
-        printf("1. নতুন Record যোগ করুন\n2. Record দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Add New Record\n2. View Records\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             addMedicalRecord();
@@ -1119,7 +1120,7 @@ void bedMenu()
     do
     {
         printf("\n---- Bed/Ward/Cabin Management ----\n");
-        printf("1. Bed Status দেখুন\n2. Patient Admit করুন\n3. Patient Discharge করুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. View Bed Status\n2. Admit Patient\n3. Discharge Patient\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             viewBedStatus();
@@ -1136,7 +1137,7 @@ void otMenu()
     do
     {
         printf("\n---- OT Management ----\n");
-        printf("1. OT Booking করুন\n2. OT Status আপডেট করুন\n3. সব OT Booking দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Book OT\n2. Update OT Status\n3. View All OT Bookings\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             bookOT();
@@ -1153,7 +1154,7 @@ void pharmacyMenu()
     do
     {
         printf("\n---- Pharmacy / Inventory ----\n");
-        printf("1. Medicine যোগ করুন\n2. Inventory দেখুন\n3. Medicine বিক্রি করুন\n4. Damaged Stock Entry\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Add Medicine\n2. View Inventory\n3. Sell Medicine\n4. Damaged Stock Entry\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             addMedicine();
@@ -1172,7 +1173,7 @@ void billingMenu()
     do
     {
         printf("\n---- Billing / Invoicing ----\n");
-        printf("1. নতুন Bill তৈরি করুন\n2. Payment করুন\n3. Invoice Print করুন\n4. সব Bill দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Generate New Bill\n2. Make Payment\n3. Print Invoice\n4. View All Bills\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             generateBill();
@@ -1191,7 +1192,7 @@ void labMenu()
     do
     {
         printf("\n---- Lab / Test Requests ----\n");
-        printf("1. Test Request করুন\n2. Test Status আপডেট করুন (Pending->Completed)\n3. সব Test দেখুন\n0. পিছনে যান\nবেছে নিন: ");
+        printf("1. Request Test\n2. Update Test Status (Pending->Completed)\n3. View All Tests\n0. Go Back\nChoose: ");
         ch = readInt();
         if (ch == 1)
             requestLabTest();
@@ -1202,7 +1203,7 @@ void labMenu()
     } while (ch != 0);
 }
 
-/* ---------------- ADMIN: সবকিছুর Access আছে ---------------- */
+/* ---------------- ADMIN: has access to everything ---------------- */
 void adminMenu()
 {
     int ch;
@@ -1220,7 +1221,7 @@ void adminMenu()
         printf("9. Lab/Test Requests\n");
         printf("10. Reports/Dashboard\n");
         printf("0. Logout\n");
-        printf("বেছে নিন: ");
+        printf("Choose: ");
         ch = readInt();
         switch (ch)
         {
@@ -1255,28 +1256,28 @@ void adminMenu()
             showDashboard();
             break;
         case 0:
-            printf("Logout হচ্ছেন...\n");
+            printf("Logging out...\n");
             break;
         default:
-            printf("ভুল Option, আবার চেষ্টা করুন।\n");
+            printf("Invalid option, please try again.\n");
         }
     } while (ch != 0);
 }
 
-/* ---------------- DOCTOR: সীমিত Access ---------------- */
+/* ---------------- DOCTOR: limited access ---------------- */
 void doctorRoleMenu()
 {
     int ch;
     do
     {
         printf("\n================ DOCTOR MENU ================\n");
-        printf("1. Assigned Patients দেখুন (Dashboard)\n");
-        printf("2. Medical Record যোগ করুন\n");
-        printf("3. Medical Record দেখুন\n");
-        printf("4. Lab Test Request করুন\n");
-        printf("5. OT Booking দেখুন\n");
+        printf("1. View Assigned Patients (Dashboard)\n");
+        printf("2. Add Medical Record\n");
+        printf("3. View Medical Records\n");
+        printf("4. Request Lab Test\n");
+        printf("5. View OT Bookings\n");
         printf("0. Logout\n");
-        printf("বেছে নিন: ");
+        printf("Choose: ");
         ch = readInt();
         switch (ch)
         {
@@ -1296,29 +1297,29 @@ void doctorRoleMenu()
             viewOTBookings();
             break;
         case 0:
-            printf("Logout হচ্ছেন...\n");
+            printf("Logging out...\n");
             break;
         default:
-            printf("ভুল Option, আবার চেষ্টা করুন।\n");
+            printf("Invalid option, please try again.\n");
         }
     } while (ch != 0);
 }
 
-/* ---------------- RECEPTIONIST: সীমিত Access ---------------- */
+/* ---------------- RECEPTIONIST: limited access ---------------- */
 void receptionistMenu()
 {
     int ch;
     do
     {
         printf("\n============ RECEPTIONIST MENU ============\n");
-        printf("1. Patient Register করুন\n");
-        printf("2. সব Patient দেখুন\n");
+        printf("1. Register Patient\n");
+        printf("2. View All Patients\n");
         printf("3. Appointment Scheduling\n");
         printf("4. Bed/Ward/Cabin Management\n");
-        printf("5. OT Booking করুন\n");
+        printf("5. Book OT\n");
         printf("6. Billing/Invoicing\n");
         printf("0. Logout\n");
-        printf("বেছে নিন: ");
+        printf("Choose: ");
         ch = readInt();
         switch (ch)
         {
@@ -1341,27 +1342,27 @@ void receptionistMenu()
             billingMenu();
             break;
         case 0:
-            printf("Logout হচ্ছেন...\n");
+            printf("Logging out...\n");
             break;
         default:
-            printf("ভুল Option, আবার চেষ্টা করুন।\n");
+            printf("Invalid option, please try again.\n");
         }
     } while (ch != 0);
 }
 
-/* ---------------- PHARMACIST: শুধু Pharmacy Access ---------------- */
+/* ---------------- PHARMACIST: Pharmacy access only ---------------- */
 void pharmacistMenu()
 {
     int ch;
     do
     {
         printf("\n============ PHARMACIST MENU ============\n");
-        printf("1. Medicine যোগ করুন\n");
-        printf("2. Inventory দেখুন\n");
-        printf("3. Medicine বিক্রি করুন\n");
+        printf("1. Add Medicine\n");
+        printf("2. View Inventory\n");
+        printf("3. Sell Medicine\n");
         printf("4. Damaged Stock Entry\n");
         printf("0. Logout\n");
-        printf("বেছে নিন: ");
+        printf("Choose: ");
         ch = readInt();
         switch (ch)
         {
@@ -1378,10 +1379,10 @@ void pharmacistMenu()
             addDamagedStock();
             break;
         case 0:
-            printf("Logout হচ্ছেন...\n");
+            printf("Logging out...\n");
             break;
         default:
-            printf("ভুল Option, আবার চেষ্টা করুন।\n");
+            printf("Invalid option, please try again.\n");
         }
     } while (ch != 0);
 }
@@ -1392,9 +1393,9 @@ void pharmacistMenu()
 int login()
 {
     char uname[20], pass[20];
-    printf("Username দিন: ");
+    printf("Enter Username: ");
     getString(uname, 20);
-    printf("Password দিন: ");
+    printf("Enter Password: ");
     getString(pass, 20);
 
     for (int i = 0; i < 4; i++)
@@ -1412,13 +1413,12 @@ int login()
    ================================================================= */
 int main()
 {
-    
-    initBeds(); /* প্রোগ্রাম শুরু হলে ২০টা Bed তৈরি হয়ে যায় */
+    initBeds(); /* 20 beds are created when the program starts */
 
     printf("=====================================================\n");
     printf("      HEALTHCARE MANAGEMENT SYSTEM (HMS)\n");
     printf("=====================================================\n");
-    printf("Demo Login তথ্য:\n");
+    printf("Demo Login Credentials:\n");
     printf("  Admin        -> username: admin        password: admin123\n");
     printf("  Doctor       -> username: doctor1       password: doc123\n");
     printf("  Receptionist -> username: reception1    password: rec123\n");
@@ -1430,11 +1430,11 @@ int main()
 
     if (idx == -1)
     {
-        printf("\n❌ ভুল Username/Password। প্রোগ্রাম বন্ধ হচ্ছে।\n");
+        printf("\nInvalid Username/Password. Program is shutting down.\n");
         return 0;
     }
 
-    printf("\n✅ স্বাগতম, %s (Role: %s)\n", users[idx].username, users[idx].role);
+    printf("\nWelcome, %s (Role: %s)\n", users[idx].username, users[idx].role);
 
     if (strcmp(users[idx].role, "Admin") == 0)
         adminMenu();
@@ -1445,6 +1445,6 @@ int main()
     else if (strcmp(users[idx].role, "Pharmacist") == 0)
         pharmacistMenu();
 
-    printf("\nধন্যবাদ, HMS ব্যবহার করার জন্য।\n");
+    printf("\nThank you for using HMS.\n");
     return 0;
 }
