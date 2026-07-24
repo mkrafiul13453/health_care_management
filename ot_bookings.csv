@@ -1,0 +1,3 @@
+id,patientId,surgeryType,date,status
+1,4,Open Surgery,09-09-2026,Scheduled
+2,3,Cosmetic Surgery,06-09-2026,Scheduled

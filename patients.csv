@@ -1,0 +1,6 @@
+id,name,age,gender,disease,phone,doctorId,active
+1,Simu,21,Female,Fever,01709882718,-1,1
+2,Meera,20,Female,Fever,01709882719,-1,1
+3,Vector,22,Male,Headache,01709882720,-1,1
+4,Tashin,21,Male,Fever,01709882721,-1,1
+5,Rafi,24,Male,Fever,01709882718,-1,1

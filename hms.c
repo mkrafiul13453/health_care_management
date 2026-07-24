@@ -1,6 +1,6 @@
 /*
 =====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM (HMS)  
+   HEALTHCARE MANAGEMENT SYSTEM (HMS)  --  Beginner Friendly C Program
 =====================================================================
    This program has 12 Functional Requirements. Each one is divided
    into a separate section, so it's easy to understand which part
@@ -38,6 +38,19 @@
 #define MAX_BILLS 100
 #define MAX_LABTESTS 100
 #define LOW_STOCK_LIMIT 10
+
+/* ---------------------------------------------------------------
+   CSV FILE NAMES -- where each module's data gets saved/loaded
+   --------------------------------------------------------------- */
+#define PATIENTS_FILE "patients.csv"
+#define DOCTORS_FILE "doctors.csv"
+#define APPOINTMENTS_FILE "appointments.csv"
+#define RECORDS_FILE "records.csv"
+#define BEDS_FILE "beds.csv"
+#define OT_FILE "ot_bookings.csv"
+#define MEDICINES_FILE "medicines.csv"
+#define BILLS_FILE "bills.csv"
+#define LABTESTS_FILE "lab_tests.csv"
 
 /* ---------------------------------------------------------------
    SECTION 1: USER & ACCESS (Role Based Login)
@@ -235,6 +248,375 @@ void pause()
 }
 
 /* =================================================================
+   SECTION 13: CSV FILE STORAGE (SAVE / LOAD)
+   -----------------------------------------------------------------
+   Each module gets its own save*ToCSV() and load*FromCSV() pair.
+   save*ToCSV()  -> writes the current in-memory array to a .csv file.
+   load*FromCSV()-> reads a .csv file (if it exists) back into the
+                    in-memory array when the program starts.
+   NOTE: this simple CSV writer/reader assumes text fields (name,
+   disease, diagnosis, etc.) do not contain commas.
+   ================================================================= */
+
+/* ---------------- Patients ---------------- */
+void savePatientsToCSV()
+{
+    FILE *fp = fopen(PATIENTS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", PATIENTS_FILE);
+        return;
+    }
+    fprintf(fp, "id,name,age,gender,disease,phone,doctorId,active\n");
+    for (int i = 0; i < patientCount; i++)
+    {
+        fprintf(fp, "%d,%s,%d,%s,%s,%s,%d,%d\n",
+                patients[i].id, patients[i].name, patients[i].age,
+                patients[i].gender, patients[i].disease, patients[i].phone,
+                patients[i].doctorId, patients[i].active);
+    }
+    fclose(fp);
+}
+
+void loadPatientsFromCSV()
+{
+    FILE *fp = fopen(PATIENTS_FILE, "r");
+    if (!fp)
+        return; /* no saved file yet, nothing to load */
+    char line[300];
+    fgets(line, sizeof(line), fp); /* skip header row */
+    patientCount = 0;
+    while (patientCount < MAX_PATIENTS &&
+           fscanf(fp, "%d,%49[^,],%d,%9[^,],%99[^,],%14[^,],%d,%d\n",
+                  &patients[patientCount].id, patients[patientCount].name,
+                  &patients[patientCount].age, patients[patientCount].gender,
+                  patients[patientCount].disease, patients[patientCount].phone,
+                  &patients[patientCount].doctorId, &patients[patientCount].active) == 8)
+    {
+        patientCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Doctors ---------------- */
+void saveDoctorsToCSV()
+{
+    FILE *fp = fopen(DOCTORS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", DOCTORS_FILE);
+        return;
+    }
+    fprintf(fp, "id,name,specialization\n");
+    for (int i = 0; i < doctorCount; i++)
+    {
+        fprintf(fp, "%d,%s,%s\n", doctors[i].id, doctors[i].name, doctors[i].specialization);
+    }
+    fclose(fp);
+}
+
+void loadDoctorsFromCSV()
+{
+    FILE *fp = fopen(DOCTORS_FILE, "r");
+    if (!fp)
+        return;
+    char line[200];
+    fgets(line, sizeof(line), fp);
+    doctorCount = 0;
+    while (doctorCount < MAX_DOCTORS &&
+           fscanf(fp, "%d,%49[^,],%49[^\n]\n",
+                  &doctors[doctorCount].id, doctors[doctorCount].name,
+                  doctors[doctorCount].specialization) == 3)
+    {
+        doctorCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Appointments ---------------- */
+void saveAppointmentsToCSV()
+{
+    FILE *fp = fopen(APPOINTMENTS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", APPOINTMENTS_FILE);
+        return;
+    }
+    fprintf(fp, "id,patientId,doctorId,date,time,status\n");
+    for (int i = 0; i < appointmentCount; i++)
+    {
+        fprintf(fp, "%d,%d,%d,%s,%s,%d\n",
+                appointments[i].id, appointments[i].patientId, appointments[i].doctorId,
+                appointments[i].date, appointments[i].time, appointments[i].status);
+    }
+    fclose(fp);
+}
+
+void loadAppointmentsFromCSV()
+{
+    FILE *fp = fopen(APPOINTMENTS_FILE, "r");
+    if (!fp)
+        return;
+    char line[200];
+    fgets(line, sizeof(line), fp);
+    appointmentCount = 0;
+    while (appointmentCount < MAX_APPOINTMENTS &&
+           fscanf(fp, "%d,%d,%d,%14[^,],%9[^,],%d\n",
+                  &appointments[appointmentCount].id, &appointments[appointmentCount].patientId,
+                  &appointments[appointmentCount].doctorId, appointments[appointmentCount].date,
+                  appointments[appointmentCount].time, &appointments[appointmentCount].status) == 6)
+    {
+        appointmentCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Medical Records ---------------- */
+void saveRecordsToCSV()
+{
+    FILE *fp = fopen(RECORDS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", RECORDS_FILE);
+        return;
+    }
+    fprintf(fp, "id,patientId,doctorId,diagnosis,prescription,date\n");
+    for (int i = 0; i < recordCount; i++)
+    {
+        fprintf(fp, "%d,%d,%d,%s,%s,%s\n",
+                records[i].id, records[i].patientId, records[i].doctorId,
+                records[i].diagnosis, records[i].prescription, records[i].date);
+    }
+    fclose(fp);
+}
+
+void loadRecordsFromCSV()
+{
+    FILE *fp = fopen(RECORDS_FILE, "r");
+    if (!fp)
+        return;
+    char line[400];
+    fgets(line, sizeof(line), fp);
+    recordCount = 0;
+    while (recordCount < MAX_RECORDS &&
+           fscanf(fp, "%d,%d,%d,%149[^,],%149[^,],%14[^\n]\n",
+                  &records[recordCount].id, &records[recordCount].patientId,
+                  &records[recordCount].doctorId, records[recordCount].diagnosis,
+                  records[recordCount].prescription, records[recordCount].date) == 6)
+    {
+        recordCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Beds ---------------- */
+void saveBedsToCSV()
+{
+    FILE *fp = fopen(BEDS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", BEDS_FILE);
+        return;
+    }
+    fprintf(fp, "bedNo,ward,isOccupied,patientId,admitDate\n");
+    for (int i = 0; i < bedCount; i++)
+    {
+        fprintf(fp, "%d,%s,%d,%d,%s\n",
+                beds[i].bedNo, beds[i].ward, beds[i].isOccupied,
+                beds[i].patientId, beds[i].admitDate);
+    }
+    fclose(fp);
+}
+
+int loadBedsFromCSV()
+{
+    FILE *fp = fopen(BEDS_FILE, "r");
+    if (!fp)
+        return 0; /* no saved file yet */
+    char line[200];
+    fgets(line, sizeof(line), fp);
+    bedCount = 0;
+    while (bedCount < MAX_BEDS &&
+           fscanf(fp, "%d,%19[^,],%d,%d,%14[^\n]\n",
+                  &beds[bedCount].bedNo, beds[bedCount].ward,
+                  &beds[bedCount].isOccupied, &beds[bedCount].patientId,
+                  beds[bedCount].admitDate) == 5)
+    {
+        bedCount++;
+    }
+    fclose(fp);
+    return bedCount;
+}
+
+/* ---------------- OT Bookings ---------------- */
+void saveOTToCSV()
+{
+    FILE *fp = fopen(OT_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", OT_FILE);
+        return;
+    }
+    fprintf(fp, "id,patientId,surgeryType,date,status\n");
+    for (int i = 0; i < otCount; i++)
+    {
+        fprintf(fp, "%d,%d,%s,%s,%s\n",
+                otBookings[i].id, otBookings[i].patientId, otBookings[i].surgeryType,
+                otBookings[i].date, otBookings[i].status);
+    }
+    fclose(fp);
+}
+
+void loadOTFromCSV()
+{
+    FILE *fp = fopen(OT_FILE, "r");
+    if (!fp)
+        return;
+    char line[200];
+    fgets(line, sizeof(line), fp);
+    otCount = 0;
+    while (otCount < MAX_OT &&
+           fscanf(fp, "%d,%d,%49[^,],%14[^,],%19[^\n]\n",
+                  &otBookings[otCount].id, &otBookings[otCount].patientId,
+                  otBookings[otCount].surgeryType, otBookings[otCount].date,
+                  otBookings[otCount].status) == 5)
+    {
+        otCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Medicines / Inventory ---------------- */
+void saveMedicinesToCSV()
+{
+    FILE *fp = fopen(MEDICINES_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", MEDICINES_FILE);
+        return;
+    }
+    fprintf(fp, "id,name,stock,price\n");
+    for (int i = 0; i < medicineCount; i++)
+    {
+        fprintf(fp, "%d,%s,%d,%.2f\n",
+                medicines[i].id, medicines[i].name, medicines[i].stock, medicines[i].price);
+    }
+    fclose(fp);
+}
+
+void loadMedicinesFromCSV()
+{
+    FILE *fp = fopen(MEDICINES_FILE, "r");
+    if (!fp)
+        return;
+    char line[200];
+    fgets(line, sizeof(line), fp);
+    medicineCount = 0;
+    while (medicineCount < MAX_MEDICINES &&
+           fscanf(fp, "%d,%49[^,],%d,%f\n",
+                  &medicines[medicineCount].id, medicines[medicineCount].name,
+                  &medicines[medicineCount].stock, &medicines[medicineCount].price) == 4)
+    {
+        medicineCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Bills ---------------- */
+void saveBillsToCSV()
+{
+    FILE *fp = fopen(BILLS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", BILLS_FILE);
+        return;
+    }
+    fprintf(fp, "id,patientId,consultationFee,medicineBill,bedBill,otBill,totalBill,paidAmount,dueAmount\n");
+    for (int i = 0; i < billCount; i++)
+    {
+        fprintf(fp, "%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+                bills[i].id, bills[i].patientId, bills[i].consultationFee,
+                bills[i].medicineBill, bills[i].bedBill, bills[i].otBill,
+                bills[i].totalBill, bills[i].paidAmount, bills[i].dueAmount);
+    }
+    fclose(fp);
+}
+
+void loadBillsFromCSV()
+{
+    FILE *fp = fopen(BILLS_FILE, "r");
+    if (!fp)
+        return;
+    char line[300];
+    fgets(line, sizeof(line), fp);
+    billCount = 0;
+    while (billCount < MAX_BILLS &&
+           fscanf(fp, "%d,%d,%f,%f,%f,%f,%f,%f,%f\n",
+                  &bills[billCount].id, &bills[billCount].patientId,
+                  &bills[billCount].consultationFee, &bills[billCount].medicineBill,
+                  &bills[billCount].bedBill, &bills[billCount].otBill,
+                  &bills[billCount].totalBill, &bills[billCount].paidAmount,
+                  &bills[billCount].dueAmount) == 9)
+    {
+        billCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Lab Tests ---------------- */
+void saveLabTestsToCSV()
+{
+    FILE *fp = fopen(LABTESTS_FILE, "w");
+    if (!fp)
+    {
+        printf("Error: could not save %s\n", LABTESTS_FILE);
+        return;
+    }
+    fprintf(fp, "id,patientId,testName,status,result\n");
+    for (int i = 0; i < labTestCount; i++)
+    {
+        fprintf(fp, "%d,%d,%s,%s,%s\n",
+                labTests[i].id, labTests[i].patientId, labTests[i].testName,
+                labTests[i].status, labTests[i].result);
+    }
+    fclose(fp);
+}
+
+void loadLabTestsFromCSV()
+{
+    FILE *fp = fopen(LABTESTS_FILE, "r");
+    if (!fp)
+        return;
+    char line[300];
+    fgets(line, sizeof(line), fp);
+    labTestCount = 0;
+    while (labTestCount < MAX_LABTESTS &&
+           fscanf(fp, "%d,%d,%49[^,],%19[^,],%99[^\n]\n",
+                  &labTests[labTestCount].id, &labTests[labTestCount].patientId,
+                  labTests[labTestCount].testName, labTests[labTestCount].status,
+                  labTests[labTestCount].result) == 5)
+    {
+        labTestCount++;
+    }
+    fclose(fp);
+}
+
+/* ---------------- Load everything at program startup ---------------- */
+void loadAllDataFromCSV()
+{
+    loadPatientsFromCSV();
+    loadDoctorsFromCSV();
+    loadAppointmentsFromCSV();
+    loadRecordsFromCSV();
+    loadOTFromCSV();
+    loadMedicinesFromCSV();
+    loadBillsFromCSV();
+    loadLabTestsFromCSV();
+    /* beds are handled separately in main(), since if no beds.csv
+       exists yet the default 20 beds need to be created first */
+}
+
+/* =================================================================
    SECTION 2: PATIENT REGISTRATION -- FUNCTIONS
    ================================================================= */
 Patient *findPatientById(int id)
@@ -272,6 +654,7 @@ void registerPatient()
 
     patients[patientCount] = p;
     patientCount++;
+    savePatientsToCSV();
 
     printf("\nPatient Registered successfully. Patient ID = %d\n", p.id);
 }
@@ -327,6 +710,7 @@ void addDoctor()
 
     doctors[doctorCount] = d;
     doctorCount++;
+    saveDoctorsToCSV();
     printf("\nDoctor added. Doctor ID = %d\n", d.id);
 }
 
@@ -367,6 +751,7 @@ void assignDoctorToPatient()
     }
 
     p->doctorId = did;
+    savePatientsToCSV();
     printf("\n%s has been assigned to Dr. %s.\n", p->name, d->name);
 }
 
@@ -445,6 +830,7 @@ void bookAppointment()
 
     appointments[appointmentCount] = a;
     appointmentCount++;
+    saveAppointmentsToCSV();
     printf("\nAppointment Booked. Appointment ID = %d\n", a.id);
 }
 
@@ -458,6 +844,7 @@ void cancelAppointment()
         if (appointments[i].id == id && appointments[i].status == 0)
         {
             appointments[i].status = 1;
+            saveAppointmentsToCSV();
             printf("Appointment cancelled.\n");
             return;
         }
@@ -523,6 +910,7 @@ void addMedicalRecord()
 
     records[recordCount] = r;
     recordCount++;
+    saveRecordsToCSV();
     printf("\nMedical Record added.\n");
 }
 
@@ -619,6 +1007,7 @@ void admitPatient()
             beds[i].patientId = pid;
             printf("Enter Admit Date (DD-MM-YYYY): ");
             getString(beds[i].admitDate, 15);
+            saveBedsToCSV();
             printf("\nPatient admitted to Bed No %d (%s).\n",
                    beds[i].bedNo, beds[i].ward);
             return;
@@ -644,12 +1033,14 @@ void dischargePatient()
             beds[i].isOccupied = 0;
             beds[i].patientId = -1;
             strcpy(beds[i].admitDate, "-");
+            saveBedsToCSV();
             printf("Patient discharged, Bed No %d is now free.\n", bedNo);
             return;
         }
     }
     printf("Bed number not found.\n");
 }
+
 /* =================================================================
    SECTION 7: OT MANAGEMENT -- FUNCTIONS
    ================================================================= */
@@ -680,6 +1071,7 @@ void bookOT()
 
     otBookings[otCount] = o;
     otCount++;
+    saveOTToCSV();
     printf("\nOT Booking completed. OT Booking ID = %d\n", o.id);
 }
 
@@ -694,6 +1086,7 @@ void updateOTStatus()
         {
             printf("Enter new Status (Scheduled/Completed/Cancelled): ");
             getString(otBookings[i].status, 20);
+            saveOTToCSV();
             printf("Status updated.\n");
             return;
         }
@@ -750,6 +1143,7 @@ void addMedicine()
 
     medicines[medicineCount] = m;
     medicineCount++;
+    saveMedicinesToCSV();
     printf("\nMedicine added. Medicine ID = %d\n", m.id);
 }
 
@@ -790,6 +1184,7 @@ void sellMedicine()
         return;
     }
     m->stock -= qty;
+    saveMedicinesToCSV();
     printf("\nSale completed. Total price: %.2f\n", qty * m->price);
 
     if (m->stock < LOW_STOCK_LIMIT)
@@ -819,6 +1214,7 @@ void addDamagedStock()
         return;
     }
     m->stock -= qty;
+    saveMedicinesToCSV();
     printf("Damaged stock removed. Current stock: %d\n", m->stock);
 }
 
@@ -860,6 +1256,7 @@ void generateBill()
 
     bills[billCount] = b;
     billCount++;
+    saveBillsToCSV();
     printf("\nBill generated. Bill ID = %d | Total = %.2f\n", b.id, b.totalBill);
 }
 
@@ -882,6 +1279,7 @@ void makePayment()
             }
             bills[i].paidAmount += amt;
             bills[i].dueAmount -= amt;
+            saveBillsToCSV();
             printf("Payment completed. Remaining Due = %.2f\n", bills[i].dueAmount);
             return;
         }
@@ -967,6 +1365,7 @@ void requestLabTest()
 
     labTests[labTestCount] = t;
     labTestCount++;
+    saveLabTestsToCSV();
     printf("\nLab Test Requested. Test ID = %d (Status: Pending)\n", t.id);
 }
 
@@ -982,6 +1381,7 @@ void updateTestStatus()
             strcpy(labTests[i].status, "Completed");
             printf("Enter Test Result: ");
             getString(labTests[i].result, 100);
+            saveLabTestsToCSV();
             printf("Test Status set to 'Completed' and Result linked to the patient.\n");
             return;
         }
@@ -1412,7 +1812,13 @@ int login()
    ================================================================= */
 int main()
 {
-    initBeds(); /* 20 beds are created when the program starts */
+    /* Load all previously saved data from CSV files (if any exist) */
+    loadAllDataFromCSV();
+    if (loadBedsFromCSV() == 0)
+    {
+        initBeds(); /* first run: no beds.csv yet, create default beds */
+        saveBedsToCSV();
+    }
 
     printf("=====================================================\n");
     printf("      HEALTHCARE MANAGEMENT SYSTEM (HMS)\n");
