@@ -392,7 +392,264 @@ void doctorDashboard()
 /* =================================================================
    SECTION 4: APPOINTMENT SCHEDULING -- FUNCTIONS
    ================================================================= */
+void bookAppointment()
+{
+    if (appointmentCount >= MAX_APPOINTMENTS)
+    {
+        printf("Appointment list is full.\n");
+        return;
+    }
+    Appointment a;
+    printf("\n--- Book a New Appointment ---\n");
+    printf("Patient ID: ");
+    int pid = readInt();
+    if (!findPatientById(pid))
+    {
+        printf("Patient not found.\n");
+        return;
+    }
 
+    printf("Doctor ID: ");
+    int did = readInt();
+    if (!findDoctorById(did))
+    {
+        printf("Doctor not found.\n");
+        return;
+    }
+
+    char date[15], time[10];
+    printf("Enter Date (DD-MM-YYYY): ");
+    getString(date, 15);
+    printf("Enter Time (HH:MM): ");
+    getString(time, 10);
+
+    /* Double booking check: same doctor, same date, same time */
+    for (int i = 0; i < appointmentCount; i++)
+    {
+        if (appointments[i].status == 0 &&
+            appointments[i].doctorId == did &&
+            strcmp(appointments[i].date, date) == 0 &&
+            strcmp(appointments[i].time, time) == 0)
+        {
+            printf("\nDoctor is already booked at this time. Please choose another time.\n");
+            return;
+        }
+    }
+
+    a.id = appointmentCount + 1;
+    a.patientId = pid;
+    a.doctorId = did;
+    strcpy(a.date, date);
+    strcpy(a.time, time);
+    a.status = 0;
+
+    appointments[appointmentCount] = a;
+    appointmentCount++;
+    printf("\nAppointment Booked. Appointment ID = %d\n", a.id);
+}
+
+void cancelAppointment()
+{
+    printf("\n--- Cancel Appointment ---\n");
+    printf("Enter Appointment ID: ");
+    int id = readInt();
+    for (int i = 0; i < appointmentCount; i++)
+    {
+        if (appointments[i].id == id && appointments[i].status == 0)
+        {
+            appointments[i].status = 1;
+            printf("Appointment cancelled.\n");
+            return;
+        }
+    }
+    printf("No active appointment found with this ID.\n");
+}
+
+void viewAppointments()
+{
+    printf("\n--- All Appointments ---\n");
+    if (appointmentCount == 0)
+    {
+        printf("No appointments found.\n");
+        return;
+    }
+    printf("%-5s %-10s %-10s %-12s %-8s %-10s\n",
+           "ID", "PatientID", "DoctorID", "Date", "Time", "Status");
+    for (int i = 0; i < appointmentCount; i++)
+    {
+        printf("%-5d %-10d %-10d %-12s %-8s %-10s\n",
+               appointments[i].id, appointments[i].patientId, appointments[i].doctorId,
+               appointments[i].date, appointments[i].time,
+               appointments[i].status == 0 ? "Booked" : "Cancelled");
+    }
+}
+
+/* =================================================================
+   SECTION 5: MEDICAL RECORDS -- FUNCTIONS
+   ================================================================= */
+void addMedicalRecord()
+{
+    if (recordCount >= MAX_RECORDS)
+    {
+        printf("Record list is full.\n");
+        return;
+    }
+    MedicalRecord r;
+    printf("\n--- Add New Medical Record ---\n");
+    printf("Patient ID: ");
+    int pid = readInt();
+    if (!findPatientById(pid))
+    {
+        printf("Patient not found.\n");
+        return;
+    }
+    printf("Doctor ID: ");
+    int did = readInt();
+    if (!findDoctorById(did))
+    {
+        printf("Doctor not found.\n");
+        return;
+    }
+
+    r.id = recordCount + 1;
+    r.patientId = pid;
+    r.doctorId = did;
+    printf("Enter Diagnosis: ");
+    getString(r.diagnosis, 150);
+    printf("Enter Prescription: ");
+    getString(r.prescription, 150);
+    printf("Enter Date (DD-MM-YYYY): ");
+    getString(r.date, 15);
+
+    records[recordCount] = r;
+    recordCount++;
+    printf("\nMedical Record added.\n");
+}
+
+void viewMedicalRecords()
+{
+    printf("\n--- View Medical Records ---\n");
+    printf("Enter Patient ID (enter 0 to view all): ");
+    int pid = readInt();
+    int found = 0;
+    for (int i = 0; i < recordCount; i++)
+    {
+        if (pid == 0 || records[i].patientId == pid)
+        {
+            printf("\nRecord ID: %d | Patient ID: %d | Doctor ID: %d | Date: %s\n",
+                   records[i].id, records[i].patientId, records[i].doctorId, records[i].date);
+            printf("Diagnosis: %s\n", records[i].diagnosis);
+            printf("Prescription: %s\n", records[i].prescription);
+            found = 1;
+        }
+    }
+    if (!found)
+        printf("No records found.\n");
+}
+
+/* =================================================================
+   SECTION 6: BED / WARD / CABIN MANAGEMENT -- FUNCTIONS
+   ================================================================= */
+void initBeds()
+{
+    /* At startup 20 beds are created: 10 General, 5 ICU, 5 Cabin */
+    int i;
+    for (i = 0; i < 10; i++)
+    {
+        beds[bedCount].bedNo = bedCount + 1;
+        strcpy(beds[bedCount].ward, "General");
+        beds[bedCount].isOccupied = 0;
+        beds[bedCount].patientId = -1;
+        strcpy(beds[bedCount].admitDate, "-");
+        bedCount++;
+    }
+    for (i = 0; i < 5; i++)
+    {
+        beds[bedCount].bedNo = bedCount + 1;
+        strcpy(beds[bedCount].ward, "ICU");
+        beds[bedCount].isOccupied = 0;
+        beds[bedCount].patientId = -1;
+        strcpy(beds[bedCount].admitDate, "-");
+        bedCount++;
+    }
+    for (i = 0; i < 5; i++)
+    {
+        beds[bedCount].bedNo = bedCount + 1;
+        strcpy(beds[bedCount].ward, "Cabin");
+        beds[bedCount].isOccupied = 0;
+        beds[bedCount].patientId = -1;
+        strcpy(beds[bedCount].admitDate, "-");
+        bedCount++;
+    }
+}
+
+void viewBedStatus()
+{
+    printf("\n--- Bed Status (Real Time) ---\n");
+    printf("%-6s %-10s %-10s %-10s %-12s\n", "BedNo", "Ward", "Status", "PatientID", "AdmitDate");
+    for (int i = 0; i < bedCount; i++)
+    {
+        printf("%-6d %-10s %-10s %-10d %-12s\n",
+               beds[i].bedNo, beds[i].ward,
+               beds[i].isOccupied ? "Occupied" : "Free",
+               beds[i].patientId, beds[i].admitDate);
+    }
+}
+
+void admitPatient()
+{
+    printf("\n--- Patient Admission ---\n");
+    printf("Enter Patient ID: ");
+    int pid = readInt();
+    if (!findPatientById(pid))
+    {
+        printf("Patient not found.\n");
+        return;
+    }
+
+    char ward[20];
+    printf("Which Ward do you want (General/ICU/Cabin): ");
+    getString(ward, 20);
+
+    for (int i = 0; i < bedCount; i++)
+    {
+        if (!beds[i].isOccupied && strcmp(beds[i].ward, ward) == 0)
+        {
+            beds[i].isOccupied = 1;
+            beds[i].patientId = pid;
+            printf("Enter Admit Date (DD-MM-YYYY): ");
+            getString(beds[i].admitDate, 15);
+            printf("\nPatient admitted to Bed No %d (%s).\n",
+                   beds[i].bedNo, beds[i].ward);
+            return;
+        }
+    }
+    printf("\nSorry, no free bed available in %s Ward.\n", ward);
+}
+
+void dischargePatient()
+{
+    printf("\n--- Patient Discharge ---\n");
+    printf("Enter Bed Number: ");
+    int bedNo = readInt();
+    for (int i = 0; i < bedCount; i++)
+    {
+        if (beds[i].bedNo == bedNo)
+        {
+            if (!beds[i].isOccupied)
+            {
+                printf("This bed is already free.\n");
+                return;
+            }
+            beds[i].isOccupied = 0;
+            beds[i].patientId = -1;
+            strcpy(beds[i].admitDate, "-");
+            printf("Patient discharged, Bed No %d is now free.\n", bedNo);
+            return;
+        }
+    }
+    printf("Bed number not found.\n");
+}
 /* =================================================================
    SECTION 7: OT MANAGEMENT -- FUNCTIONS
    ================================================================= */
