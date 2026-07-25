@@ -1,10 +1,10 @@
 /*
 =====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM 
+   HEALTHCARE MANAGEMENT SYSTEM
 =====================================================================
-   This program has 12 Functional Requirements. 
+   This program has 12 Functional Requirements.
 
-   1. User & Access (Role based Login)          -> SECTION 1
+   1. User & Access (Role based Login)          -> SECTION 1        // indentation needs to be fixed, either use space or tabs but make sure indentation is welly putted
    2. Patient Registration                       -> SECTION 2
    3. Doctor Management                          -> SECTION 3
    4. Appointment Scheduling                      -> SECTION 4
@@ -26,7 +26,7 @@
 /* ---------------------------------------------------------------
    MAX SIZE values -- limits on how much data can be stored
    --------------------------------------------------------------- */
-#define MAX_PATIENTS 100
+#define MAX_PATIENTS 100 // variable Casing are not following standard procedure, use snake_case, camelCase, or PascalCase
 #define MAX_DOCTORS 20
 #define MAX_APPOINTMENTS 200
 #define MAX_RECORDS 200
@@ -55,16 +55,16 @@
    --------------------------------------------------------------- */
 typedef struct
 {
-    char username[20];
-    char password[20];
+    char username[20]; // variable declaration has security vulnerability, variable declaration must use KISS, YAGNI, and DRY principles
+    char password[20]; // same as above
     char role[20];
 } User;
 
 User users[4] = {
-    {"admin", "admin123", "Admin"},
-    {"doctor1", "doc123", "Doctor"},
-    {"reception1", "rec123", "Receptionist"},
-    {"pharma1", "pharma123", "Pharmacist"}};
+    {"admin", "admin123", "Admin"},           // variable declaration has security vulnerability, variable declaration must use KISS, YAGNI, and DRY principles
+    {"doctor1", "doc123", "Doctor"},          // same as above
+    {"reception1", "rec123", "Receptionist"}, // same as above
+    {"pharma1", "pharma123", "Pharmacist"}};  // same as above
 
 /* ---------------------------------------------------------------
    SECTION 2: PATIENT REGISTRATION
@@ -124,7 +124,7 @@ typedef struct
     char diagnosis[150];
     char prescription[150];
     char date[15];
-} MedicalRecord;
+} MedicalRecord; // All Casing should follow same pattern for better readability
 
 MedicalRecord records[MAX_RECORDS];
 int recordCount = 0;
@@ -164,7 +164,7 @@ int otCount = 0;
    --------------------------------------------------------------- */
 typedef struct
 {
-    int id;
+    int ID;
     char name[50];
     int stock;
     float price;
@@ -213,7 +213,7 @@ int labTestCount = 0;
 void clearBuffer()
 {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF)
+    while ((c = getchar()) != '\n' && c != EOF) // AI Codebase detected without understanding the codebase, please learn first
         ;
 }
 
