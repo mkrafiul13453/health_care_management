@@ -1,10 +1,8 @@
 /*
 =====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM (HMS) 
+   HEALTHCARE MANAGEMENT SYSTEM 
 =====================================================================
-   This program has 12 Functional Requirements. Each one is divided
-   into a separate section, so it's easy to understand which part
-   does what.
+   This program has 12 Functional Requirements. 
 
    1. User & Access (Role based Login)          -> SECTION 1
    2. Patient Registration                       -> SECTION 2
