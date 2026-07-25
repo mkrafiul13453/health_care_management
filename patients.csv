@@ -4,3 +4,4 @@ id,name,age,gender,disease,phone,doctorId,active
 3,Vector,22,Male,Headache,01709882720,-1,1
 4,Tashin,21,Male,Fever,01709882721,-1,1
 5,Rafi,24,Male,Fever,01709882718,-1,1
+6,Hasan,21,Male,Fever,01498716548,-1,1

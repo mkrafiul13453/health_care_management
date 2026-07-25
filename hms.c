@@ -1,6 +1,6 @@
 /*
 =====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM (HMS)  --  Beginner Friendly C Program
+   HEALTHCARE MANAGEMENT SYSTEM (HMS) 
 =====================================================================
    This program has 12 Functional Requirements. Each one is divided
    into a separate section, so it's easy to understand which part
