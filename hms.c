@@ -1,18 +1,3 @@
-/*
-=====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM -- hms.c (MAIN FILE)
-=====================================================================
-   This is the file that is compiled and run. It contains:
-     - The list of user accounts (SECTION 1: User & Access)
-     - The login() function
-     - main(), which loads saved data, logs the user in, and then
-       hands control to the correct role menu:
-         adminMenu()         -> admin.c
-         doctorRoleMenu()    -> doctor.c
-         receptionistMenu()  -> reception.c
-         pharmacistMenu()    -> pharmacy.c
-=====================================================================
-*/
 
 #include "hms.h"
 
