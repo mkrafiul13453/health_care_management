@@ -1,5 +1,5 @@
 bedNo,ward,isOccupied,patientId,admitDate
-1,General,1,2,06-9-2026
+1,General,0,-1,-
 2,General,0,-1,-
 3,General,0,-1,-
 4,General,0,-1,-
@@ -14,7 +14,7 @@ bedNo,ward,isOccupied,patientId,admitDate
 13,ICU,0,-1,-
 14,ICU,0,-1,-
 15,ICU,0,-1,-
-16,Cabin,1,2,05-08-2026
+16,Cabin,0,-1,-
 17,Cabin,0,-1,-
 18,Cabin,0,-1,-
 19,Cabin,0,-1,-
