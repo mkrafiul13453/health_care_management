@@ -593,7 +593,7 @@ void assignDoctorToPatient(void)
 void doctorDashboard(void)
 {
     printf("\n--- Doctor Dashboard: Assigned Patients ---\n");
-    printf("Enter your Doctor ID: ");
+    printf("Enter Doctor ID: ");
     int did = readInt();
     int found = 0;
     for (int i = 0; i < patientCount; i++)
@@ -606,7 +606,7 @@ void doctorDashboard(void)
         }
     }
     if (!found)
-        printf("No patients assigned to this doctor.\n");
+        printf("No patients assigned.\n");
 }
 
 /* =================================================================
