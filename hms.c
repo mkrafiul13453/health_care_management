@@ -19,7 +19,7 @@ static int login(void)
 
     for (int i = 0; i < 4; i++)
     {
-        if (strcmp(users[i].username, uname) == 0 && strcmp(users[i].password, pass) == 0)
+        if (strcmp(users[i].userName, uname) == 0 && strcmp(users[i].password, pass) == 0)
         {
             return i;
         }
@@ -32,11 +32,11 @@ static int login(void)
    ================================================================= */
 int main(void)
 {
-    /* Load all previously saved data from CSV files (if any exist) */
+    
     loadAllDataFromCSV();
     if (loadBedsFromCSV() == 0)
     {
-        initBeds(); /* first run: no beds.csv yet, create default beds */
+        initBeds(); 
         saveBedsToCSV();
     }
 
@@ -44,10 +44,10 @@ int main(void)
     printf("      HEALTHCARE MANAGEMENT SYSTEM (HMS)\n");
     printf("=====================================================\n");
     printf("Demo Login Credentials:\n");
-    printf("  Admin        -> username: admin        password: admin123\n");
-    printf("  Doctor       -> username: doctor1       password: doc123\n");
-    printf("  Receptionist -> username: reception1    password: rec123\n");
-    printf("  Pharmacist   -> username: pharma1       password: pharma123\n");
+    printf("  Admin        -> userName: admin         password: admin123\n");
+    printf("  Doctor       -> userName: doctor1       password: doc123\n");
+    printf("  Receptionist -> userName: reception1    password: rec123\n");
+    printf("  Pharmacist   -> userName: pharma1       password: pharma123\n");
     printf("=====================================================\n\n");
 
     printf("---- LOGIN ----\n");
@@ -55,11 +55,11 @@ int main(void)
 
     if (idx == -1)
     {
-        printf("\nInvalid Username/Password. Program is shutting down.\n");
+        printf("\nInvalid userName/Password. Program is shutting down.\n");
         return 0;
     }
 
-    printf("\nWelcome, %s (Role: %s)\n", users[idx].username, users[idx].role);
+    printf("\nWelcome, %s (Role: %s)\n", users[idx].userName, users[idx].role);
 
     if (strcmp(users[idx].role, "Admin") == 0)
         adminMenu();

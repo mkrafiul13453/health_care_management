@@ -1,27 +1,3 @@
-/*
-=====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM -- SHARED HEADER (hms.h)
-=====================================================================
-   This header is shared by every source file in the project
-   (admin.c, doctor.c, reception.c, pharmacy.c, hms.c).
-
-   It contains:
-     - Data structures (Patient, Doctor, Appointment, ...)
-     - Size limits and CSV file name constants
-     - "extern" declarations of the global data arrays, so that
-       every .c file can access the same in-memory data
-     - Prototypes of every function, so that any file can call a
-       function that is defined in another file
-
-   NOTE: The actual data (patients[], doctors[], ...) and most of
-   the business-logic functions are DEFINED once, in admin.c, since
-   several roles (Admin, Doctor, Receptionist) share the same
-   underlying functions (e.g. bedMenu, billingMenu, viewOTBookings).
-   Defining them only once avoids "multiple definition" linker
-   errors while keeping the exact same functionality as before.
-=====================================================================
-*/
-
 #ifndef HMS_H
 #define HMS_H
 
@@ -29,39 +5,36 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* ---------------------------------------------------------------
-   MAX SIZE values -- limits on how much data can be stored
-   --------------------------------------------------------------- */
-#define MAX_PATIENTS 100
-#define MAX_DOCTORS 20
-#define MAX_APPOINTMENTS 200
-#define MAX_RECORDS 200
-#define MAX_BEDS 20
-#define MAX_OT 50
-#define MAX_MEDICINES 50
-#define MAX_BILLS 100
-#define MAX_LABTESTS 100
+
+#define maxPatient 100
+#define maxDoctors 20
+#define maxAppointments 200
+#define maxRecords 200
+#define maxBeds 20
+#define maxOT 50
+#define maxMedicines 50
+#define maxBills 100
+#define maxLabTests 100
 #define LOW_STOCK_LIMIT 10
 
-/* ---------------------------------------------------------------
-   CSV FILE NAMES -- where each module's data gets saved/loaded
-   --------------------------------------------------------------- */
-#define PATIENTS_FILE "patients.csv"
-#define DOCTORS_FILE "doctors.csv"
-#define APPOINTMENTS_FILE "appointments.csv"
-#define RECORDS_FILE "records.csv"
-#define BEDS_FILE "beds.csv"
-#define OT_FILE "ot_bookings.csv"
-#define MEDICINES_FILE "medicines.csv"
-#define BILLS_FILE "bills.csv"
-#define LABTESTS_FILE "lab_tests.csv"
+
+#define patientsFile "patients.csv"
+#define doctorsFile "doctors.csv"
+#define appointmentsFile "appointments.csv"
+#define recordsFile "records.csv"
+#define bedsFile "beds.csv"
+#define otFile "ot_bookings.csv"
+#define medicinesFile "medicines.csv"
+#define billsFile "bills.csv"
+#define labTestsFile "lab_tests.csv"
+
 
 /* ---------------------------------------------------------------
    SECTION 1: USER & ACCESS (Role Based Login)
    --------------------------------------------------------------- */
 typedef struct
 {
-    char username[20];
+    char userName[20];
     char password[20];
     char role[20];
 } User;
@@ -77,8 +50,8 @@ typedef struct
     char gender[10];
     char disease[100];
     char phone[15];
-    int doctorId; /* assigned doctor, -1 means none assigned */
-    int active;   /* 1 = registered/valid record */
+    int doctorId; 
+    int active;   
 } Patient;
 
 /* ---------------------------------------------------------------
@@ -101,7 +74,7 @@ typedef struct
     int doctorId;
     char date[15];
     char time[10];
-    int status; /* 0 = Booked, 1 = Cancelled */
+    int status; 
 } Appointment;
 
 /* ---------------------------------------------------------------
@@ -123,8 +96,8 @@ typedef struct
 typedef struct
 {
     int bedNo;
-    char ward[20];  /* General / ICU / Cabin */
-    int isOccupied; /* 0 = free, 1 = occupied */
+    char ward[20];  
+    int isOccupied; 
     int patientId;
     char admitDate[15];
 } Bed;
@@ -138,7 +111,7 @@ typedef struct
     int patientId;
     char surgeryType[50];
     char date[15];
-    char status[20]; /* Scheduled / Completed / Cancelled */
+    char status[20]; 
 } OTBooking;
 
 /* ---------------------------------------------------------------
@@ -176,38 +149,38 @@ typedef struct
     int id;
     int patientId;
     char testName[50];
-    char status[20]; /* Pending / Completed */
+    char status[20]; 
     char result[100];
 } LabTest;
 
 /* =================================================================
    GLOBAL DATA (defined once in admin.c, shared via "extern" here)
    ================================================================= */
-extern Patient patients[MAX_PATIENTS];
+extern Patient patients[maxPatient];
 extern int patientCount;
 
-extern Doctor doctors[MAX_DOCTORS];
+extern Doctor doctors[maxDoctors];
 extern int doctorCount;
 
-extern Appointment appointments[MAX_APPOINTMENTS];
+extern Appointment appointments[maxAppointments];
 extern int appointmentCount;
 
-extern MedicalRecord records[MAX_RECORDS];
+extern MedicalRecord records[maxRecords];
 extern int recordCount;
 
-extern Bed beds[MAX_BEDS];
+extern Bed beds[maxBeds];
 extern int bedCount;
 
-extern OTBooking otBookings[MAX_OT];
+extern OTBooking otBookings[maxOT];
 extern int otCount;
 
-extern Medicine medicines[MAX_MEDICINES];
+extern Medicine medicines[maxMedicines];
 extern int medicineCount;
 
-extern Bill bills[MAX_BILLS];
+extern Bill bills[maxBills];
 extern int billCount;
 
-extern LabTest labTests[MAX_LABTESTS];
+extern LabTest labTests[maxLabTests];
 extern int labTestCount;
 
 /* =================================================================
@@ -336,4 +309,4 @@ void doctorRoleMenu(void);   /* defined in doctor.c    */
 void receptionistMenu(void); /* defined in reception.c */
 void pharmacistMenu(void);   /* defined in pharmacy.c  */
 
-#endif /* HMS_H */
+#endif 

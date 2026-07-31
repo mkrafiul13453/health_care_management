@@ -3,31 +3,31 @@
 /* =================================================================
    GLOBAL DATA DEFINITIONS
    ================================================================= */
-Patient patients[MAX_PATIENTS];
+Patient patients[maxPatient];
 int patientCount = 0;
 
-Doctor doctors[MAX_DOCTORS];
+Doctor doctors[maxDoctors];
 int doctorCount = 0;
 
-Appointment appointments[MAX_APPOINTMENTS];
+Appointment appointments[maxAppointments];
 int appointmentCount = 0;
 
-MedicalRecord records[MAX_RECORDS];
+MedicalRecord records[maxRecords];
 int recordCount = 0;
 
-Bed beds[MAX_BEDS];
+Bed beds[maxBeds];
 int bedCount = 0;
 
-OTBooking otBookings[MAX_OT];
+OTBooking otBookings[maxOT];
 int otCount = 0;
 
-Medicine medicines[MAX_MEDICINES];
+Medicine medicines[maxMedicines];
 int medicineCount = 0;
 
-Bill bills[MAX_BILLS];
+Bill bills[maxBills];
 int billCount = 0;
 
-LabTest labTests[MAX_LABTESTS];
+LabTest labTests[maxLabTests];
 int labTestCount = 0;
 
 /* =================================================================
@@ -43,7 +43,7 @@ void clearBuffer(void)
 void getString(char *buffer, int size)
 {
     fgets(buffer, size, stdin);
-    buffer[strcspn(buffer, "\n")] = '\0'; /* removes the trailing \n */
+    buffer[strcspn(buffer, "\n")] = '\0'; 
 }
 
 int readInt(void)
@@ -75,10 +75,10 @@ void pause(void)
 /* ---------------- Patients ---------------- */
 void savePatientsToCSV(void)
 {
-    FILE *fp = fopen(PATIENTS_FILE, "w");
+    FILE *fp = fopen(patientsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", PATIENTS_FILE);
+        printf("Error: could not save %s\n", patientsFile);
         return;
     }
     fprintf(fp, "id,name,age,gender,disease,phone,doctorId,active\n");
@@ -94,13 +94,13 @@ void savePatientsToCSV(void)
 
 void loadPatientsFromCSV(void)
 {
-    FILE *fp = fopen(PATIENTS_FILE, "r");
+    FILE *fp = fopen(patientsFile, "r");
     if (!fp)
-        return; /* no saved file yet, nothing to load */
+        return; 
     char line[300];
-    fgets(line, sizeof(line), fp); /* skip header row */
+    fgets(line, sizeof(line), fp); 
     patientCount = 0;
-    while (patientCount < MAX_PATIENTS &&
+    while (patientCount < maxPatient &&
            fscanf(fp, "%d,%49[^,],%d,%9[^,],%99[^,],%14[^,],%d,%d\n",
                   &patients[patientCount].id, patients[patientCount].name,
                   &patients[patientCount].age, patients[patientCount].gender,
@@ -115,10 +115,10 @@ void loadPatientsFromCSV(void)
 /* ---------------- Doctors ---------------- */
 void saveDoctorsToCSV(void)
 {
-    FILE *fp = fopen(DOCTORS_FILE, "w");
+    FILE *fp = fopen(doctorsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", DOCTORS_FILE);
+        printf("Error: could not save %s\n", doctorsFile);
         return;
     }
     fprintf(fp, "id,name,specialization\n");
@@ -131,13 +131,13 @@ void saveDoctorsToCSV(void)
 
 void loadDoctorsFromCSV(void)
 {
-    FILE *fp = fopen(DOCTORS_FILE, "r");
+    FILE *fp = fopen(doctorsFile, "r");
     if (!fp)
         return;
     char line[200];
     fgets(line, sizeof(line), fp);
     doctorCount = 0;
-    while (doctorCount < MAX_DOCTORS &&
+    while (doctorCount < maxDoctors &&
            fscanf(fp, "%d,%49[^,],%49[^\n]\n",
                   &doctors[doctorCount].id, doctors[doctorCount].name,
                   doctors[doctorCount].specialization) == 3)
@@ -150,10 +150,10 @@ void loadDoctorsFromCSV(void)
 /* ---------------- Appointments ---------------- */
 void saveAppointmentsToCSV(void)
 {
-    FILE *fp = fopen(APPOINTMENTS_FILE, "w");
+    FILE *fp = fopen(appointmentsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", APPOINTMENTS_FILE);
+        printf("Error: could not save %s\n", appointmentsFile);
         return;
     }
     fprintf(fp, "id,patientId,doctorId,date,time,status\n");
@@ -168,13 +168,13 @@ void saveAppointmentsToCSV(void)
 
 void loadAppointmentsFromCSV(void)
 {
-    FILE *fp = fopen(APPOINTMENTS_FILE, "r");
+    FILE *fp = fopen(appointmentsFile, "r");
     if (!fp)
         return;
     char line[200];
     fgets(line, sizeof(line), fp);
     appointmentCount = 0;
-    while (appointmentCount < MAX_APPOINTMENTS &&
+    while (appointmentCount < maxAppointments &&
            fscanf(fp, "%d,%d,%d,%14[^,],%9[^,],%d\n",
                   &appointments[appointmentCount].id, &appointments[appointmentCount].patientId,
                   &appointments[appointmentCount].doctorId, appointments[appointmentCount].date,
@@ -188,10 +188,10 @@ void loadAppointmentsFromCSV(void)
 /* ---------------- Medical Records ---------------- */
 void saveRecordsToCSV(void)
 {
-    FILE *fp = fopen(RECORDS_FILE, "w");
+    FILE *fp = fopen(recordsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", RECORDS_FILE);
+        printf("Error: could not save %s\n", recordsFile);
         return;
     }
     fprintf(fp, "id,patientId,doctorId,diagnosis,prescription,date\n");
@@ -206,13 +206,13 @@ void saveRecordsToCSV(void)
 
 void loadRecordsFromCSV(void)
 {
-    FILE *fp = fopen(RECORDS_FILE, "r");
+    FILE *fp = fopen(recordsFile, "r");
     if (!fp)
         return;
     char line[400];
     fgets(line, sizeof(line), fp);
     recordCount = 0;
-    while (recordCount < MAX_RECORDS &&
+    while (recordCount < maxRecords &&
            fscanf(fp, "%d,%d,%d,%149[^,],%149[^,],%14[^\n]\n",
                   &records[recordCount].id, &records[recordCount].patientId,
                   &records[recordCount].doctorId, records[recordCount].diagnosis,
@@ -226,10 +226,10 @@ void loadRecordsFromCSV(void)
 /* ---------------- Beds ---------------- */
 void saveBedsToCSV(void)
 {
-    FILE *fp = fopen(BEDS_FILE, "w");
+    FILE *fp = fopen(bedsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", BEDS_FILE);
+        printf("Error: could not save %s\n", bedsFile);
         return;
     }
     fprintf(fp, "bedNo,ward,isOccupied,patientId,admitDate\n");
@@ -244,13 +244,13 @@ void saveBedsToCSV(void)
 
 int loadBedsFromCSV(void)
 {
-    FILE *fp = fopen(BEDS_FILE, "r");
+    FILE *fp = fopen(bedsFile, "r");
     if (!fp)
         return 0; /* no saved file yet */
     char line[200];
     fgets(line, sizeof(line), fp);
     bedCount = 0;
-    while (bedCount < MAX_BEDS &&
+    while (bedCount < maxBeds &&
            fscanf(fp, "%d,%19[^,],%d,%d,%14[^\n]\n",
                   &beds[bedCount].bedNo, beds[bedCount].ward,
                   &beds[bedCount].isOccupied, &beds[bedCount].patientId,
@@ -265,10 +265,10 @@ int loadBedsFromCSV(void)
 /* ---------------- OT Bookings ---------------- */
 void saveOTToCSV(void)
 {
-    FILE *fp = fopen(OT_FILE, "w");
+    FILE *fp = fopen(otFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", OT_FILE);
+        printf("Error: could not save %s\n", otFile);
         return;
     }
     fprintf(fp, "id,patientId,surgeryType,date,status\n");
@@ -283,13 +283,13 @@ void saveOTToCSV(void)
 
 void loadOTFromCSV(void)
 {
-    FILE *fp = fopen(OT_FILE, "r");
+    FILE *fp = fopen(otFile, "r");
     if (!fp)
         return;
     char line[200];
     fgets(line, sizeof(line), fp);
     otCount = 0;
-    while (otCount < MAX_OT &&
+    while (otCount < maxOT &&
            fscanf(fp, "%d,%d,%49[^,],%14[^,],%19[^\n]\n",
                   &otBookings[otCount].id, &otBookings[otCount].patientId,
                   otBookings[otCount].surgeryType, otBookings[otCount].date,
@@ -303,10 +303,10 @@ void loadOTFromCSV(void)
 /* ---------------- Medicines / Inventory ---------------- */
 void saveMedicinesToCSV(void)
 {
-    FILE *fp = fopen(MEDICINES_FILE, "w");
+    FILE *fp = fopen(medicinesFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", MEDICINES_FILE);
+        printf("Error: could not save %s\n", medicinesFile);
         return;
     }
     fprintf(fp, "id,name,stock,price\n");
@@ -320,13 +320,13 @@ void saveMedicinesToCSV(void)
 
 void loadMedicinesFromCSV(void)
 {
-    FILE *fp = fopen(MEDICINES_FILE, "r");
+    FILE *fp = fopen(medicinesFile, "r");
     if (!fp)
         return;
     char line[200];
     fgets(line, sizeof(line), fp);
     medicineCount = 0;
-    while (medicineCount < MAX_MEDICINES &&
+    while (medicineCount < maxMedicines &&
            fscanf(fp, "%d,%49[^,],%d,%f\n",
                   &medicines[medicineCount].id, medicines[medicineCount].name,
                   &medicines[medicineCount].stock, &medicines[medicineCount].price) == 4)
@@ -339,10 +339,10 @@ void loadMedicinesFromCSV(void)
 /* ---------------- Bills ---------------- */
 void saveBillsToCSV(void)
 {
-    FILE *fp = fopen(BILLS_FILE, "w");
+    FILE *fp = fopen(billsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", BILLS_FILE);
+        printf("Error: could not save %s\n", billsFile);
         return;
     }
     fprintf(fp, "id,patientId,consultationFee,medicineBill,bedBill,otBill,totalBill,paidAmount,dueAmount\n");
@@ -358,13 +358,13 @@ void saveBillsToCSV(void)
 
 void loadBillsFromCSV(void)
 {
-    FILE *fp = fopen(BILLS_FILE, "r");
+    FILE *fp = fopen(billsFile, "r");
     if (!fp)
         return;
     char line[300];
     fgets(line, sizeof(line), fp);
     billCount = 0;
-    while (billCount < MAX_BILLS &&
+    while (billCount < maxBills &&
            fscanf(fp, "%d,%d,%f,%f,%f,%f,%f,%f,%f\n",
                   &bills[billCount].id, &bills[billCount].patientId,
                   &bills[billCount].consultationFee, &bills[billCount].medicineBill,
@@ -380,10 +380,10 @@ void loadBillsFromCSV(void)
 /* ---------------- Lab Tests ---------------- */
 void saveLabTestsToCSV(void)
 {
-    FILE *fp = fopen(LABTESTS_FILE, "w");
+    FILE *fp = fopen(labTestsFile, "w");
     if (!fp)
     {
-        printf("Error: could not save %s\n", LABTESTS_FILE);
+        printf("Error: could not save %s\n", labTestsFile);
         return;
     }
     fprintf(fp, "id,patientId,testName,status,result\n");
@@ -398,13 +398,13 @@ void saveLabTestsToCSV(void)
 
 void loadLabTestsFromCSV(void)
 {
-    FILE *fp = fopen(LABTESTS_FILE, "r");
+    FILE *fp = fopen(labTestsFile, "r");
     if (!fp)
         return;
     char line[300];
     fgets(line, sizeof(line), fp);
     labTestCount = 0;
-    while (labTestCount < MAX_LABTESTS &&
+    while (labTestCount < maxLabTests &&
            fscanf(fp, "%d,%d,%49[^,],%19[^,],%99[^\n]\n",
                   &labTests[labTestCount].id, &labTests[labTestCount].patientId,
                   labTests[labTestCount].testName, labTests[labTestCount].status,
@@ -445,13 +445,13 @@ Patient *findPatientById(int id)
 
 void registerPatient(void)
 {
-    if (patientCount >= MAX_PATIENTS)
+    if (patientCount >= maxPatient)
     {
         printf("Patient list is full, cannot add more.\n");
         return;
     }
     Patient p;
-    p.id = patientCount + 1; /* Unique Patient ID auto generate */
+    p.id = patientCount + 1; 
     printf("\n--- New Patient Registration ---\n");
     printf("Enter name: ");
     getString(p.name, 50);
@@ -509,7 +509,7 @@ Doctor *findDoctorById(int id)
 
 void addDoctor(void)
 {
-    if (doctorCount >= MAX_DOCTORS)
+    if (doctorCount >= maxDoctors)
     {
         printf("Doctor list is full.\n");
         return;
@@ -594,7 +594,7 @@ void doctorDashboard(void)
    ================================================================= */
 void bookAppointment(void)
 {
-    if (appointmentCount >= MAX_APPOINTMENTS)
+    if (appointmentCount >= maxAppointments)
     {
         printf("Appointment list is full.\n");
         return;
@@ -691,7 +691,7 @@ void viewAppointments(void)
    ================================================================= */
 void addMedicalRecord(void)
 {
-    if (recordCount >= MAX_RECORDS)
+    if (recordCount >= maxRecords)
     {
         printf("MedicalRecord list is full.\n");
         return;
@@ -861,7 +861,7 @@ void dischargePatient(void)
    ================================================================= */
 void bookOT(void)
 {
-    if (otCount >= MAX_OT)
+    if (otCount >= maxOT)
     {
         printf("OT booking list is full.\n");
         return;
@@ -941,7 +941,7 @@ Medicine *findMedicineById(int id)
 
 void addMedicine(void)
 {
-    if (medicineCount >= MAX_MEDICINES)
+    if (medicineCount >= maxMedicines)
     {
         printf("Medicine list is full.\n");
         return;
@@ -1038,7 +1038,7 @@ void addDamagedStock(void)
    ================================================================= */
 void generateBill(void)
 {
-    if (billCount >= MAX_BILLS)
+    if (billCount >= maxBills)
     {
         printf("Bill list is full.\n");
         return;
@@ -1156,7 +1156,7 @@ void viewAllBills(void)
    ================================================================= */
 void requestLabTest(void)
 {
-    if (labTestCount >= MAX_LABTESTS)
+    if (labTestCount >= maxLabTests)
     {
         printf("Lab Test list is full.\n");
         return;
