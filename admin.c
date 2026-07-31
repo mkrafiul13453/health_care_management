@@ -610,6 +610,7 @@ void doctorDashboard(void)
 }
 
 /* =================================================================
+
    SECTION 4: APPOINTMENT SCHEDULING -- FUNCTIONS
    ================================================================= */
 void bookAppointment(void)
@@ -713,7 +714,7 @@ void addMedicalRecord(void)
 {
     if (recordCount >= MAX_RECORDS)
     {
-        printf("Record list is full.\n");
+        printf("MedicalRecord list is full.\n");
         return;
     }
     MedicalRecord r;
