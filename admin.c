@@ -1,24 +1,3 @@
-/*
-=====================================================================
-   HEALTHCARE MANAGEMENT SYSTEM -- admin.c
-=====================================================================
-   This file owns:
-     - The actual (non-extern) storage for every data array, since
-       C requires each global variable to be DEFINED in exactly one
-       file. All other files "see" this data through hms.h.
-     - Every helper / CSV / business-logic function for all 12
-       functional requirements.
-     - The shared sub-menus (patientMenu, bedMenu, billingMenu, ...)
-       that are used by more than one role.
-     - The Admin role menu itself (adminMenu), which has access to
-       every module.
-
-   Doctor, Receptionist and Pharmacist only need their own dedicated
-   menu function (in doctor.c / reception.c / pharmacy.c); they call
-   straight into the functions defined here.
-=====================================================================
-*/
-
 #include "hms.h"
 
 /* =================================================================
@@ -1402,7 +1381,7 @@ void pharmacyMenu(void)
 }
 
 void billingMenu(void)
-{
+{                         
     int ch;
     do
     {
