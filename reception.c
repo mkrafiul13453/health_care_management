@@ -3,7 +3,7 @@
 /* RECEPTIONIST: limited access*/
 void receptionistMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n========== RECEPTIONIST MENU ============\n");
@@ -15,8 +15,8 @@ void receptionistMenu(void)
         printf("6. Billing/Invoicing\n");
         printf("0. Logout\n");
         printf("Choose: ");
-        ch = readInt();
-        switch (ch)
+        choice = readInt();
+        switch (choice)
         {
         case 1:
             registerPatient();
@@ -42,5 +42,5 @@ void receptionistMenu(void)
         default:
             printf("Invalid option, please try again.\n");
         }
-    } while (ch != 0);
+    } while (choice != 0);
 }

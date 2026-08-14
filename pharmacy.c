@@ -1,11 +1,9 @@
-
-
 #include "hms.h"
 
 
 void pharmacistMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n============ PHARMACIST MENU ============\n");
@@ -15,8 +13,8 @@ void pharmacistMenu(void)
         printf("4. Damaged Stock Entry\n");
         printf("0. Logout\n");
         printf("Choose: ");
-        ch = readInt();
-        switch (ch)
+        choice = readInt();
+        switch (choice)
         {
         case 1:
             addMedicine();
@@ -36,5 +34,5 @@ void pharmacistMenu(void)
         default:
             printf("Invalid option, please try again.\n");
         }
-    } while (ch != 0);
+    } while (choice != 0);
 }

@@ -3,7 +3,7 @@
 /* ---------------- DOCTOR: limited access ---------------- */
 void doctorRoleMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n================ DOCTOR MENU ================\n");
@@ -14,8 +14,8 @@ void doctorRoleMenu(void)
         printf("5. View OT Bookings\n");
         printf("0. Logout\n");
         printf("Choose: ");
-        ch = readInt();
-        switch (ch)
+        choice = readInt();
+        switch (choice)
         {
         case 1:
             doctorDashboard();
@@ -38,5 +38,5 @@ void doctorRoleMenu(void)
         default:
             printf("Invalid option, please try again.\n");
         }
-    } while (ch != 0);
+    } while (choice != 0);
 }

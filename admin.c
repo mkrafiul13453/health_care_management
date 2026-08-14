@@ -2,7 +2,7 @@
 
 /* =================================================================
    GLOBAL DATA DEFINITIONS
-   === */
+   ================================================================= */
 Patient patients[maxPatient];
 int patientCount = 0;
 
@@ -589,7 +589,6 @@ void doctorDashboard(void)
 }
 
 /* =================================================================
-
    SECTION 4: APPOINTMENT SCHEDULING -- FUNCTIONS
    ================================================================= */
 void bookAppointment(void)
@@ -1264,157 +1263,157 @@ void showDashboard(void)
    ================================================================= */
 void patientMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Patient Management ----\n");
         printf("1. Register Patient\n2. View All Patients\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             registerPatient();
-        else if (ch == 2)
+        else if (choice == 2)
             viewAllPatients();
-    } while (ch != 0);
+    } while (choice);
 }
 
 void doctorMenu(void)
 {
-    int ch;
+    int cchoiceh;
     do
     {
         printf("\n---- Doctor Management ----\n");
         printf("1. Add Doctor\n2. View All Doctors\n3. Assign Doctor to Patient\n4. Doctor Dashboard\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             addDoctor();
-        else if (ch == 2)
+        else if (choice == 2)
             viewAllDoctors();
-        else if (ch == 3)
+        else if (choice == 3)
             assignDoctorToPatient();
-        else if (ch == 4)
+        else if (choice == 4)
             doctorDashboard();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void appointmentMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Appointment Scheduling ----\n");
         printf("1. Book Appointment\n2. Cancel Appointment\n3. View All Appointments\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             bookAppointment();
-        else if (ch == 2)
+        else if (choice == 2)
             cancelAppointment();
-        else if (ch == 3)
+        else if (choice == 3)
             viewAppointments();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void recordMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Medical Records ----\n");
         printf("1. Add New Record\n2. View Records\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             addMedicalRecord();
-        else if (ch == 2)
+        else if (choice == 2)
             viewMedicalRecords();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void bedMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Bed/Ward/Cabin Management ----\n");
         printf("1. View Bed Status\n2. Admit Patient\n3. Discharge Patient\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice)
             viewBedStatus();
-        else if (ch == 2)
+        else if (choice == 2)
             admitPatient();
-        else if (ch == 3)
+        else if (choice == 3)
             dischargePatient();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void otMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- OT Management ----\n");
         printf("1. Book OT\n2. Update OT Status\n3. View All OT Bookings\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             bookOT();
-        else if (ch == 2)
+        else if (choice == 2)
             updateOTStatus();
-        else if (ch == 3)
+        else if (choice == 3)
             viewOTBookings();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void pharmacyMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Pharmacy / Inventory ----\n");
         printf("1. Add Medicine\n2. View Inventory\n3. Sell Medicine\n4. Damaged Stock Entry\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             addMedicine();
-        else if (ch == 2)
+        else if (choice == 2)
             viewInventory();
-        else if (ch == 3)
+        else if (choice == 3)
             sellMedicine();
-        else if (ch == 4)
+        else if (choice == 4)
             addDamagedStock();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void billingMenu(void)
-{                         
-    int ch;
+{
+    int choice;
     do
     {
         printf("\n---- Billing / Invoicing ----\n");
         printf("1. Generate New Bill\n2. Make Payment\n3. Print Invoice\n4. View All Bills\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             generateBill();
-        else if (ch == 2)
+        else if (choice == 2)
             makePayment();
-        else if (ch == 3)
+        else if (choice == 3)
             printInvoice();
-        else if (ch == 4)
+        else if (choice == 4)
             viewAllBills();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 void labMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n---- Lab / Test Requests ----\n");
         printf("1. Request Test\n2. Update Test Status (Pending->Completed)\n3. View All Tests\n0. Go Back\nChoose: ");
-        ch = readInt();
-        if (ch == 1)
+        choice = readInt();
+        if (choice == 1)
             requestLabTest();
-        else if (ch == 2)
+        else if (choice == 2)
             updateTestStatus();
-        else if (ch == 3)
+        else if (choice == 3)
             viewLabTests();
-    } while (ch != 0);
+    } while (choice != 0);
 }
 
 /* =================================================================
@@ -1422,7 +1421,7 @@ void labMenu(void)
    ================================================================= */
 void adminMenu(void)
 {
-    int ch;
+    int choice;
     do
     {
         printf("\n================ ADMIN MENU ================\n");
@@ -1438,8 +1437,8 @@ void adminMenu(void)
         printf("10. Reports/Dashboard\n");
         printf("0. Logout\n");
         printf("Choose: ");
-        ch = readInt();
-        switch (ch)
+        choice = readInt();
+        switch (choice)
         {
         case 1:
             patientMenu();
@@ -1477,5 +1476,5 @@ void adminMenu(void)
         default:
             printf("Invalid option, please try again.\n");
         }
-    } while (ch != 0);
+    } while (choice != 0);
 }
