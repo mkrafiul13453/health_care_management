@@ -1,12 +1,3 @@
-/*
-
-   HEALTHCARE MANAGEMENT SYSTEM -- reception.c
-   Contains the Receptionist role menu only. All the functions it
-   calls (registerPatient, viewAllPatients, appointmentMenu,
-   bedMenu, bookOT, billingMenu) are defined in admin.c and
-   declared in hms.h.
-*/
-
 #include "hms.h"
 
 /* RECEPTIONIST: limited access*/

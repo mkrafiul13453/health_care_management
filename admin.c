@@ -2,7 +2,7 @@
 
 /* =================================================================
    GLOBAL DATA DEFINITIONS
-   ================================================================= */
+   === */
 Patient patients[maxPatient];
 int patientCount = 0;
 
@@ -909,8 +909,8 @@ void updateOTStatus(void)
     printf("ID not found.\n");
 }
 
-void viewOTBookings(void)
-{
+void viewOTBookings(void)     
+{    
     printf("\n--- All OT Bookings ---\n");
     if (otCount == 0)
     {
@@ -963,7 +963,7 @@ void addMedicine(void)
 }
 
 void viewInventory(void)
-{
+{     
     printf("\n--- Inventory / Stock List ---\n");
     if (medicineCount == 0)
     {

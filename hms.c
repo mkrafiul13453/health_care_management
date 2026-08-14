@@ -1,7 +1,7 @@
 #include "hms.h"
 
 /* ---------------------------------------------------------------
-   SECTION 1: USER & ACCESS (Role Based Login)
+   SECTION 1: USER & ACCESS (Role Based Login) This is role based authentication
    --------------------------------------------------------------- */
 static User users[4] = {
     {"admin", "admin123", "Admin"},
@@ -28,7 +28,7 @@ static int login(void)
 }
 
 /* =================================================================
-   MAIN FUNCTION
+   MAIN FUNCTION of the program
    ================================================================= */
 int main(void)
 {
